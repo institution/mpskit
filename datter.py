@@ -1,7 +1,7 @@
 from common import *
 from ctypes import c_uint8, c_uint16, c_uint32, c_int32
 
-verbose = 1
+verbose = 0
 
 
 

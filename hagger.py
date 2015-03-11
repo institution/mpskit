@@ -1,5 +1,7 @@
 from common import *	
 
+verbose = 0
+
 def read_madsconcat(f, output_path):
 	with open(os.path.join(output_path, 'lst'), 'w') as lst_file:
 		# idstring
