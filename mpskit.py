@@ -38,7 +38,7 @@ def call(fmt,cmd,arg1):
 		
 				
 
-usage = 'usage: python3 mps.py <"hag"|"dat"|"ss"> <"unpack"|"pack"> <file-name>'
+usage = 'usage: mpskit.py <"hag"|"dat"|"ss"> <"unpack"|"pack"> <file-name>'
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
 		print(usage)
