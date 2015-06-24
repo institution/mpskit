@@ -40,10 +40,12 @@ def read_madsconcat(f, fname):
 			
 	
 
-def write_madsconcat(f, fname):
+def write_madsconcat(fname):
 	
-	output_path = '{}.dir'.format(fname)
-	lst_file = '{}.lst'.format(fname)
+	f = open(fname, 'wb')
+	
+	dir_path = '{}.dir'.format(fname)
+	lst_name = '{}.lst'.format(fname)
 	
 	lst = [fn.strip() for fn in open(lst_name, 'r').readlines()]
 	
@@ -57,13 +59,13 @@ def write_madsconcat(f, fname):
 	curr_header = f.tell()
 	curr_offset = f.tell() + numfiles * struct.calcsize("<II14s")
 	
-	for fname in lst:
-		fpath = os.path.join(input_path, fname)
+	for subfname in lst:
+		fpath = os.path.join(dir_path, subfname)
 		length = os.path.getsize(fpath)
 		
 		# file header
 		f.seek(curr_header)
-		write_struct(f, "<II14s", (curr_offset,length,fname.encode('ascii')))
+		write_struct(f, "<II14s", (curr_offset,length,subfname.encode('ascii')))
 		curr_header = f.tell()
 		
 		# file content
@@ -72,3 +74,5 @@ def write_madsconcat(f, fname):
 		curr_offset = f.tell()
 	
 	
+	f.close()
+	print(fname)

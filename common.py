@@ -1,3 +1,4 @@
+from io import BytesIO
 import struct, os, os.path, sys, io
 
 class Error(Exception): 
@@ -45,6 +46,10 @@ def read_uint32(f):
 	
 def read_int32(f):
 	return read_struct(f, '<i')[0]
+
+def write_ascii(f, s):
+	for b in s.encode('ascii'):
+		write_uint8(f, b)
 	
 	
 def write_uint8(f, val):

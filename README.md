@@ -5,12 +5,11 @@ Installation
 ------------
 
 ```bash
-# download and unpack
 wget https://github.com/institution/mpskit/archive/master.zip
 unzip master.zip
 cd mpskit-master
-export PATH="$PATH:`pwd`"
 chmod +x mpskit.py
+export PATH="$PATH:`pwd`"
 ```
 
 Usage example

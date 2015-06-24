@@ -1,5 +1,5 @@
 from common import *
-from madspack import read_madspack
+from madspack import read_madspack, write_madspack
 from collections import namedtuple
 from PIL import Image, ImageDraw
 
@@ -42,13 +42,17 @@ def read_ss(f, fname):
 	253 len col       produce len * [col] pixels, read command
 
 	"""
+	verbose = 0
 	
-	parts = list(read_madspack(f))
+	
+	parts = read_madspack(f)
+	
 	
 	for i in range(len(parts)):
 		oname = '{}.part.{:01}'.format(fname, i)
 		print(oname)
 		part = parts[i]
+		
 		open(oname, 'wb').write(part.read())
 		part.seek(0)
 		
@@ -62,9 +66,15 @@ def read_ss(f, fname):
 	
 	pal = read_pallete(parts[2])
 	
+	if verbose:
+		print("ntiles=",h.ntiles)
+	
 	imgs = []
 	f3 = parts[3]
 	for i in range(h.ntiles):
+		if verbose:
+			print("reading tile i=", i)
+			
 		img = read_ss_tile(shead[i], f3, pal)
 		oname = '{}.{:03}.png'.format(fname, i)
 		img.save(oname)
@@ -75,7 +85,11 @@ def read_ss(f, fname):
 	return imgs
 
 
-def write_ss():
+
+def write_ss(fname):
+	f = open(fname, 'wb')
+	
+	
 	parts = [None,None,None,None]
 	
 	# header
@@ -87,36 +101,31 @@ def write_ss():
 	hh = read_ss_header(parts[0])
 	pal = read_pallete(parts[2])
 	
-	rpal = [(v,k) for k,v in pal.items()]
+	rpal = {}
+	for i,col in enumerate(pal):
+		rpal[col] = i
 	
-	hs = [None] * hh.ntiles
-	
-	for i in range(hh.ntiles):
-		h = Header()
 		
+	parts[1] = BytesIO()
+	parts[3] = BytesIO()
+		
+	for i in range(hh.ntiles):		
 		iname = '{}.{:03}.png'.format(fname, i)
 		img = Image.open(iname)
+		write_ss_tile(parts[1], parts[3], img, rpal)
 		
-		h.width_padded = img.size[0]
-		h.height_padded = img.size[1]
-		h.width = img.size[0]
-		h.height = img.size[1]
+	
+	
+	for part in parts:
+		part.seek(0)
+	
+	write_madspack(f, parts)
 		
-		data = BytesIO()
-		for x in range(img.size[0]):
-			for y in range(img.size[1]):
-				pix = img.getpixel()
-				col = pix[:3]
-				
-				ind = rpal[col]
-				
-				data
-				
-				
-		h.start_offset = read_uint32(f)
-		h.length = read_uint32(f)
+	f.close()
+	print(fname)
+	
+	
 		
-
 		
 	
 	
@@ -125,6 +134,8 @@ def write_ss():
 	
 class Header: 
 	pass
+
+	
 
 def read_ss_header(f):
 	h = Header()
@@ -139,7 +150,14 @@ def read_ss_header(f):
 	
 
 
-
+def write_sprite_header(f, h):	
+	write_uint32(f, h.start_offset)
+	write_uint32(f, h.length)
+	write_uint16(f, h.width_padded)
+	write_uint16(f, h.height_padded)
+	write_uint16(f, h.width)
+	write_uint16(f, h.height)
+	
 def read_sprite_header(f):
 	verbose = 0
 	
@@ -208,11 +226,56 @@ def export_pallete(pal, trg):
 	img.save('{}/pal.png'.format(dname))
 
 	
-def write_ss_tile(pal):
+def write_ss_tile(hpart, dpart, img, rpal):
+	"""
+	hpart -- headers part
+	dpart -- data part
+	img -- image
+	rpal -- reversed pallete	
+	"""
 	
-	pass
+	# data
+	data = dpart
+	start = data.tell()
+	for y in range(img.size[1]):
+		
+		write_uint8(data, 254)     # pixel line mode
+		
+		for x in range(img.size[0]):
+			write_uint8(data, 254)     # len pixels
+			write_uint8(data, 1)     # len = 1
+			
+			pix = img.getpixel((x,y))
+			if pix == (0,0,0,0):
+				# transparent background
+				write_uint8(data, 0xFD)
+			else:		
+				col = pix[:3]
+				ind = rpal[col]
+				write_uint8(data, ind)
+			
+		write_uint8(data, 255)
+			
+	write_uint8(data, 252)
+		
+		
+	# header
+	h = Header()
+	h.width_padded = img.size[0]
+	h.height_padded = img.size[1]
+	h.width = img.size[0]
+	h.height = img.size[1]
+	h.start_offset = start
+	h.length = data.tell() - start
 	
-def read_ss_tile(ti, rdata, pal):
+	write_sprite_header(hpart, h)	
+	
+				
+
+
+
+	
+def read_ss_tile(ti, rdata, pal, verbose=0):
 	"""
 	ti -- sprite header
 	rdata -- file-like object
@@ -220,9 +283,13 @@ def read_ss_tile(ti, rdata, pal):
 	"""
 	
 	data = rdata.read()
+	rdata.seek(0)
 	
 	img = Image.new('RGBA', (ti.width, ti.height), 'black')
 	pix = img.load()
+	
+	if verbose:
+		print("sprite size =", ti.width, ti.height)
 	
 	i = j = 0
 	k = ti.start_offset
@@ -238,7 +305,8 @@ def read_ss_tile(ti, rdata, pal):
 			
 		nonlocal i
 		while l > 0:
-			#print(i,j,c)
+			if verbose:
+				print(i,j,c)
 			pix[i,j] = c
 			i += 1
 			l -= 1
@@ -255,6 +323,10 @@ def read_ss_tile(ti, rdata, pal):
 		return r
 	
 	lm = read()
+	
+	if verbose:
+		print('lm=',lm)
+		
 	while 1:   #j < ti.height:  #k < ti.length:
 		
 		# line mode
@@ -293,7 +365,8 @@ def read_ss_tile(ti, rdata, pal):
 				else:
 					print('ERROR: unknown lm:', lm)
 					assert 0
-				
+	
+	
 	return img
 	
 

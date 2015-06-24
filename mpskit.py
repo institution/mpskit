@@ -21,14 +21,14 @@ def call(fmt,cmd,arg1):
 		if cmd == 'unpack':
 			read_madsconcat(open(arg1, 'rb'), arg1)
 		elif cmd == 'pack':
-			write_madsconcat(open(arg1, 'wb'), arg1)
+			write_madsconcat(arg1)
 	
 	
 	elif fmt == 'ss':
 		if cmd == 'unpack':
 			read_ss(open(arg1, 'rb'), arg1)
 		elif cmd == 'pack':
-			write_ss(open(arg1, 'wb'), arg1)
+			write_ss(arg1)
 		else:
 			print(usage)
 			sys.exit(1)
