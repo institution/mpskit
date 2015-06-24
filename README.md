@@ -6,37 +6,35 @@ Installation
 
 ```bash
 # download and unpack
-wget -O mpskit.tar.gz http://gitorious.org/var/mpskit/archive-tarball/master
-tar xzf mpskit.tar.gz
-cd var-mpskit/
-
-```
-
-Usage examples
---------------
-
-```bash
-# install
+wget https://github.com/institution/mpskit/archive/master.zip
+unzip master.zip
+cd mpskit-master
 export PATH="$PATH:~/workspace/mpskit"
 chmod +x mpskit.py
+```
+
+Usage example
+-------------
+
+```bash
 
 # copy your REX
 cp ~/dosbox/REX . -r
 
 # unpack
 cd REX
-python3 mpskit.py hag unpack GLOBAL.HAG GLOBAL.HAG.dir
+python3 mpskit.py hag unpack GLOBAL.HAG
 
 cd GLOBAL.HAG.dir
-python3 mpskit.py dat unpack MESSAGES.DAT MESSAGES.DAT.txt
-python3 mpskit.py ss unpack OB042.SS OB042.SS.lst
+python3 mpskit.py dat unpack MESSAGES.DAT
+python3 mpskit.py ss unpack OB042.SS
 
 # pack
-python3 mpskit.py ss pack OB042.SS OB042.SS.lst
-python3 mpskit.py dat pack MESSAGES.DAT MESSAGES.DAT.txt
+python3 mpskit.py ss pack OB042.SS
+python3 mpskit.py dat pack MESSAGES.DAT
 cd ..
 
-python3 mpskit.py hag pack GLOBAL.HAG GLOBAL.HAG.dir
+python3 mpskit.py hag pack GLOBAL.HAG
 cd ..
 
 
