@@ -1,7 +1,8 @@
-from common import *
-from ctypes import c_uint8, c_uint16, c_uint32, c_int32
+from fab import *
 
-verbose = 0
+def read_searchfab(f):
+	
+
 
 
 

@@ -1,9 +1,19 @@
+import os
 from common import *	
 
 verbose = 0
 
-def read_madsconcat(f, output_path):
-	with open(os.path.join(output_path, 'lst'), 'w') as lst_file:
+def read_madsconcat(f, fname):
+	
+	output_path = '{}.dir'.format(fname)
+	lst_name = '{}.lst'.format(fname)
+	
+	if not os.path.exists(output_path):
+		os.mkdir(output_path)
+	
+	print(output_path)
+	print(lst_name)
+	with open(lst_name, 'w') as lst_file:
 		# idstring
 		read_idstring(f, b"MADSCONCAT 1.0\x1A\x00")
 		
@@ -21,15 +31,21 @@ def read_madsconcat(f, output_path):
 						
 			# file content
 			f.seek(offset)
-			with open(os.path.join(output_path,name), 'wb') as out:
+			oname = os.path.join(output_path,name)
+			with open(oname, 'wb') as out:
 				out.write(f.read(length))
 			
 			# lst entry
 			lst_file.write(name+'\n')
+			
 	
 
-def write_madsconcat(f, input_path):
-	lst = [fn.strip() for fn in open(os.path.join(input_path, 'lst'), 'r').readlines()]
+def write_madsconcat(f, fname):
+	
+	output_path = '{}.dir'.format(fname)
+	lst_file = '{}.lst'.format(fname)
+	
+	lst = [fn.strip() for fn in open(lst_name, 'r').readlines()]
 	
 	# idstring	
 	f.write(b"MADSCONCAT 1.0\x1A\x00")
@@ -54,29 +70,5 @@ def write_madsconcat(f, input_path):
 		f.seek(curr_offset)
 		f.write(open(fpath,'rb').read())
 		curr_offset = f.tell()
-	
-	
-usage = 'usage: python3 hagger.py <"unpack"|"pack"> FILE.HAG existing_dir/'
-if __name__ == "__main__":
-	if len(sys.argv) != 4:
-		print(usage)
-		sys.exit(1)
-		
-	cmd = sys.argv[1]
-	arg1 = sys.argv[2]
-	arg2 = sys.argv[3]
-	
-	if cmd == 'unpack':
-		read_madsconcat(open(arg1, 'rb'), arg2)
-	elif cmd == 'pack':
-		write_madsconcat(open(arg1, 'wb'), arg2)
-	else:
-		print(usage)
-		sys.exit(1)
-		
-		
-		
-	
-	
 	
 	

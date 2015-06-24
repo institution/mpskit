@@ -1,4 +1,4 @@
-import struct, os, os.path, sys
+import struct, os, os.path, sys, io
 
 class Error(Exception): 
 	pass
@@ -7,10 +7,25 @@ def read_idstring(f, idstring):
 	x = f.read(len(idstring))
 	if x != idstring:
 		raise Error("invalid idstring: {}; expected={};  ".format(repr(x), repr(idstring)))
+
+def check_magic(x, y):
+	if x != y:
+		raise Error("invalid magic: {} != {};  ".format(repr(x), repr(y)))
+
+verbose = 1
+
 	
 def read_struct(f, fmt):
 	data = f.read(struct.calcsize(fmt))
 	return struct.unpack(fmt, data)
+	
+def calcsize(fmt):
+	return struct.calcsize(fmt)
+	
+reads = read_struct
+
+def read(f, fmt):
+	return read_struct(f,fmt)[0]
 	
 def get_asciiz(buf):	
 	i = buf.find(b'\x00')
