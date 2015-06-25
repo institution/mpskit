@@ -51,7 +51,13 @@ def call(fmt,cmd,arg1):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"fab"> <"unpack"|"pack"> <file-name>'''
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"fab"> <"unpack"|"pack"> <file-name>
+
+license: Affero General Public License v3 or later
+written by: `Institution` (sta256+mpskit at gmail.com)
+See README.md and LICENSE for more details.
+This program is free software.'''
+
 
 def main():
 	if len(sys.argv) != 4:
