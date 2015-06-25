@@ -38,6 +38,11 @@ cd ..
 
 ```
 
+Notes
+-----
+
+* While modifying unpacked png files use only colors already existiing in the image.
+
 License
 -------
 AGPLv3 or later
