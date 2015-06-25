@@ -40,7 +40,8 @@ def call(fmt,cmd,arg1):
 		if cmd == 'unpack':
 			read_fab_unrestricted(arg1)			
 		elif cmd == 'pack':
-			write_fab_unrestricted(arg1)			
+			print("fab compression? what for?")
+			# write_fab_unrestricted(arg1)		
 		else:
 			print(usage)
 			sys.exit(1)
