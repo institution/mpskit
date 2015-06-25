@@ -2,14 +2,23 @@ from common import *
 from madspack import read_madspack, write_madspack
 from collections import namedtuple
 from PIL import Image, ImageDraw
+from fab import read_fab
 
-def read_ss(f, fname):
+ext = 'png'
+
+def read_ss(f, ss_name):
 	
 	"""
 	SS file is a MADSPACK file with 4 parts:
 
 	* part 1
-		header, not sure about content
+		header
+			mode -- part3 encoding
+				0 -- linemode
+				1 -- FAB and linemode
+			count -- number of sprites
+			size -- size of part3
+		
 		
 	* part 2
 		is composed of tile_headers, there can be many tiles in one file 
@@ -42,14 +51,14 @@ def read_ss(f, fname):
 	253 len col       produce len * [col] pixels, read command
 
 	"""
-	verbose = 0
+	verbose = 1
 	
 	
 	parts = read_madspack(f)
 	
 	
 	for i in range(len(parts)):
-		oname = '{}.part.{:01}'.format(fname, i)
+		oname = '{}.s{:02}.part'.format(ss_name, i)
 		print(oname)
 		part = parts[i]
 		
@@ -57,64 +66,89 @@ def read_ss(f, fname):
 		part.seek(0)
 		
 		
-	h = read_ss_header(parts[0])
+	ss_header = read_ss_header(parts[0])
 	
-	f1 = parts[1]
-	shead = []
-	for _ in range(h.ntiles):
-		shead.append(read_sprite_header(f1))
-	
-	pal = read_pallete(parts[2])
+	# save header
+	save_ss_header(ss_name, ss_header)
 	
 	if verbose:
-		print("ntiles=",h.ntiles)
+		print("nsprites=", ss_header.nsprites)
 	
-	imgs = []
-	f3 = parts[3]
-	for i in range(h.ntiles):
-		if verbose:
-			print("reading tile i=", i)
-			
-		img = read_ss_tile(shead[i], f3, pal)
-		oname = '{}.{:03}.png'.format(fname, i)
-		img.save(oname)
-		print(oname)
 		
-		imgs.append(img)
+	sprite_headers = []
+	
+	for i in range(ss_header.nsprites):
+		sprite_header = read_sprite_header(parts[1])
+		sprite_headers.append(sprite_header)
 		
-	return imgs
-
-
-
-def write_ss(fname):
-	f = open(fname, 'wb')
+		# save header
+		sprite_name = '{}.{:03}'.format(ss_name, i)
+		save_sprite_header(sprite_name, sprite_header)
+		
 	
 	
-	parts = [None,None,None,None]
-	
-	# header
-	parts[0] = open('{}.part.{:01}'.format(fname, 0), 'rb')
-	
-	# pallete
-	parts[2] = open('{}.part.{:01}'.format(fname, 2), 'rb')
-	
-	hh = read_ss_header(parts[0])
 	pal = read_pallete(parts[2])
 	
+	sprites = []
+	for i, sprite_header in enumerate(sprite_headers):
+		sprite = read_sprite(sprite_header, parts[3], pal, mode = ss_header.mode)
+		sprites.append(sprite)
+		
+		# save sprite
+		sprite_name = '{}.{:03}'.format(ss_name, i)
+		save_sprite(sprite_name, sprite)
+	
+	return sprites
+
+
+	
+def save_sprite(sprite_name, sprite):
+	oname = sprite_name+'.png'
+	sprite.save(oname)
+	print(oname)
+
+
+
+
+def write_ss(ss_name):
+	f = open(ss_name, 'wb')
+	
+	ss_header = load_ss_header(ss_name)
+	
+	
+	
+	
+	
+	# pallete
+	part2 = open('{}.s{:02}.part'.format(ss_name, 2), 'rb')
+	
+	pal = read_pallete(part2)
+	
+	# reverse pallete
 	rpal = {}
 	for i,col in enumerate(pal):
 		rpal[col] = i
 	
 		
-	parts[1] = BytesIO()
-	parts[3] = BytesIO()
+	part1 = BytesIO()
+	part3 = BytesIO()
 		
-	for i in range(hh.ntiles):		
-		iname = '{}.{:03}.png'.format(fname, i)
-		img = Image.open(iname)
-		write_ss_tile(parts[1], parts[3], img, rpal)
+	size = 0
+	for i in range(ss_header.nsprites):		
+		sprite_name = '{}.{:03}'.format(ss_name, i)		
+		img = Image.open(sprite_name+'.png')		
+		spr_hd = load_sprite_header(sprite_name)		
+		size += write_sprite(part1, part3, spr_hd, img, rpal)
 		
+		
+	ss_header.mode = 0   # only linemode without fab
+	ss_header.data_size = size
 	
+	part0 = BytesIO()
+	write_ss_header(part0, ss_header)
+	
+	
+	parts = [part0, part1, part2, part3]
 	
 	for part in parts:
 		part.seek(0)
@@ -122,32 +156,98 @@ def write_ss(fname):
 	write_madspack(f, parts)
 		
 	f.close()
-	print(fname)
+	print(ss_name)
 	
 	
 		
-		
-	
-	
 
-	
-	
 class Header: 
 	pass
-
 	
 
-def read_ss_header(f):
+def save_sprite_header(sprite_name, h):
+	oname = sprite_name + '.json'
+	open(oname, 'w').write(
+		json.dumps([
+			('start_offset', h.start_offset),
+			('length', h.length),
+			('width_padded', h.width_padded),
+			('height_padded', h.height_padded),
+			('width', h.width),
+			('height', h.height),
+		])
+	)
+	print(oname)
+	
+
+
+def load_sprite_header(sprite_name):
+	kvs = json.loads(open(sprite_name + '.json', 'r').read())	
 	h = Header()
-	
-	f.seek(0x00000026)
-	h.ntiles = read_uint16(f)   
-	
-	f.seek(152)
-	
-	assert f.tell() == 152	
+	for k,v in kvs:
+		setattr(h, k, v)
 	return h
 	
+
+		
+def load_ss_header(ss_name):
+	kvs = json.loads(open(ss_name + '.json', 'r').read())	
+	h = Header()
+	for k,v in kvs:
+		setattr(h, k, v)
+	return h
+	
+
+def save_ss_header(ss_name, h):
+	oname = ss_name + '.json'
+	open(oname, 'w').write(
+		json.dumps([
+			('mode', h.mode),
+			('unk1', h.unk1),
+			('type1', h.type1),
+			('type2', h.type2),
+			('unk2', h.unk2),
+			('nsprites', h.nsprites),
+			('unk3', h.unk3),
+			('data_size', h.data_size),
+			
+		])
+	)
+	print(oname)
+
+def read_ss_header(f):
+	h = Header()	
+	h.mode = read_uint8(f)
+	h.unk1 = read_uint8(f)
+	h.type1 = read_uint16(f)
+	h.type2 = read_uint16(f)
+	h.unk2 = read_bytes(f, 32)	
+	assert f.tell() == 0x26
+	h.nsprites = read_uint16(f)  
+	h.unk3 = read_bytes(f, 108)	
+	assert f.tell() == 0x94
+	h.data_size = read_uint32(f)   # size of last section (part) (unfabed)
+	assert f.tell() == 0x98
+	return h
+
+
+
+
+def write_ss_header(f, h):
+	write_uint8(f, h.mode)
+	write_uint8(f, h.unk1)
+	write_uint16(f, h.type1)
+	write_uint16(f, h.type2)
+	write_bytes(f, h.unk2)	
+	assert f.tell() == 0x26
+	write_uint16(f, h.nsprites) 
+	write_bytes(f, h.unk3)	
+	assert f.tell() == 0x94
+	write_uint32(f, h.data_size)   # size of last section (part) (unfabed)
+	assert f.tell() == 0x98
+	return f.tell()
+	
+
 
 
 def write_sprite_header(f, h):	
@@ -223,68 +323,95 @@ def export_pallete(pal, trg):
 			d.setink(j*16 + i)			
 			d.rectangle((i, j, i+1, j+1))
 		
-	img.save('{}/pal.png'.format(dname))
+	img.save('{}/pal.{}'.format(dname, ext))
+
+
+
+
 
 	
-def write_ss_tile(hpart, dpart, img, rpal):
+def write_sprite(head, data, header, img, rpal):
 	"""
-	hpart -- headers part
-	dpart -- data part
+	head -- headers part
+	data -- data part
+	header -- original header
 	img -- image
 	rpal -- reversed pallete	
+	return -- size writen to data
 	"""
 	
+	# 1x1 image is used instead of 0x0 image because 0x0 image cannot be represented as png
+	if img.size[0] > 1:
+		assert header.width == img.size[0]	
+	if img.size[1] > 1:
+		assert header.height == img.size[1]
+	
 	# data
-	data = dpart
 	start = data.tell()
-	for y in range(img.size[1]):
+	size = 0
+	for y in range(header.height):
 		
-		write_uint8(data, 254)     # pixel line mode
+		size += write_uint8(data, 254)     # pixel line mode
 		
-		for x in range(img.size[0]):
-			write_uint8(data, 254)     # len pixels
-			write_uint8(data, 1)     # len = 1
+		for x in range(header.width):
+			size += write_uint8(data, 254)     # len pixels
+			size += write_uint8(data, 1)     # len = 1
 			
 			pix = img.getpixel((x,y))
 			if pix == (0,0,0,0):
 				# transparent background
-				write_uint8(data, 0xFD)
+				size += write_uint8(data, 0xFD)
 			else:		
 				col = pix[:3]
 				ind = rpal[col]
-				write_uint8(data, ind)
+				size += write_uint8(data, ind)
 			
-		write_uint8(data, 255)
+		size += write_uint8(data, 255)
 			
-	write_uint8(data, 252)
-		
-		
+	size += write_uint8(data, 252)
+			
 	# header
-	h = Header()
-	h.width_padded = img.size[0]
-	h.height_padded = img.size[1]
-	h.width = img.size[0]
-	h.height = img.size[1]
-	h.start_offset = start
-	h.length = data.tell() - start
+	header.start_offset = start
+	header.length = data.tell() - start
 	
-	write_sprite_header(hpart, h)	
+	write_sprite_header(head, header)	
 	
+	return size
 				
 
 
 
 	
-def read_ss_tile(ti, rdata, pal, verbose=0):
+def read_sprite(ti, rdata, pal, mode, verbose=0):
 	"""
 	ti -- sprite header
 	rdata -- file-like object
 	pal -- array of (R,G,B)
 	"""
 	
-	data = rdata.read()
-	rdata.seek(0)
+	rdata.seek(ti.start_offset)
 	
+	if mode == 0:
+		data = rdata.read(ti.length)
+	
+	elif mode == 1:
+		data = read_fab(rdata, ti.length).read()
+		
+	else:
+		raise Error('invalid sprite mode: {}'.format(mode))
+	
+	
+	
+	# special case
+	if ti.width == 0 or ti.height == 0:
+		if data[0] == 252:		
+			img = Image.new("RGBA", (1,1))
+			img.putpixel((0,0), (0,0,0,0))
+			return img
+		else:
+			raise Error('invalid encoding of 0x0 image while reading SS file')
+			
+
 	img = Image.new('RGBA', (ti.width, ti.height), 'black')
 	pix = img.load()
 	
@@ -292,7 +419,7 @@ def read_ss_tile(ti, rdata, pal, verbose=0):
 		print("sprite size =", ti.width, ti.height)
 	
 	i = j = 0
-	k = ti.start_offset
+	k = 0
 	bg = 0xFD
 	
 	def write_ind(ci, l=1):
@@ -322,11 +449,17 @@ def read_ss_tile(ti, rdata, pal, verbose=0):
 		k += 1
 		return r
 	
-	lm = read()
 	
-	if verbose:
-		print('lm=',lm)
-		
+	def read_lm():
+		x = read()
+		if verbose:
+			print('lm=',x)
+		return x
+			
+			
+	lm = read_lm()
+	
+			
 	while 1:   #j < ti.height:  #k < ti.length:
 		
 		# line mode
@@ -334,7 +467,8 @@ def read_ss_tile(ti, rdata, pal, verbose=0):
 			# fill with bg color to the end of this line
 			write_ind(bg, ti.width - i)
 			nextline()
-			lm = read()
+			lm = read_lm()
+			
 			
 		elif lm == 252:
 			# end of image
@@ -345,7 +479,7 @@ def read_ss_tile(ti, rdata, pal, verbose=0):
 			if x == 255:
 				write_ind(bg, ti.width - i)			
 				nextline()
-				lm = read()			
+				lm = read_lm()			
 		
 			else:
 				if lm == 254:

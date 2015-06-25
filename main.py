@@ -1,13 +1,16 @@
-#!/usr/bin/python3
 import sys
-from common import Error
+from common import Error, External
 from hag import read_madsconcat,write_madsconcat
 from dat import read_messagesdat,write_messagesdat
 from ss import read_ss, write_ss
+from fab import read_fab_unrestricted
 
 def call(fmt,cmd,arg1):
+	if '/' in arg1:
+		raise External("path not allowed as argument; change directory and use file-name")
+	
 	if cmd not in ['pack','unpack']:
-		raise Error("invalid command")
+		raise External("invalid command")
 	
 	if fmt == 'dat':
 		
@@ -32,14 +35,25 @@ def call(fmt,cmd,arg1):
 		else:
 			print(usage)
 			sys.exit(1)
+			
+	elif fmt == 'fab':
+		if cmd == 'unpack':
+			read_fab_unrestricted(arg1)			
+		elif cmd == 'pack':
+			write_fab_unrestricted(arg1)			
+		else:
+			print(usage)
+			sys.exit(1)
+		
 		
 	else:
-		raise Error('invalid format')
+		raise External('invalid format specification')
 		
 				
 
-usage = 'usage: mpskit.py <"hag"|"dat"|"ss"> <"unpack"|"pack"> <file-name>'
-if __name__ == "__main__":
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"fab"> <"unpack"|"pack"> <file-name>'''
+
+def main():
 	if len(sys.argv) != 4:
 		print(usage)
 		sys.exit(1)
@@ -48,7 +62,15 @@ if __name__ == "__main__":
 	cmd = sys.argv[2]
 	arg1 = sys.argv[3]
 	
-	call(fmt,cmd,arg1)
+	try:
+		call(fmt,cmd,arg1)
+	except External as e:
+		print(usage)
+		print('ERROR', e)
+		sys.exit(1)
+	
+if __name__ == "__main__":
+	main()
 	
 		
 		

@@ -1,8 +1,9 @@
 from io import BytesIO
+import json
 import struct, os, os.path, sys, io
 
-class Error(Exception): 
-	pass
+class Error(Exception): pass
+class External(Error): pass
 
 def read_idstring(f, idstring):
 	x = f.read(len(idstring))
@@ -35,6 +36,12 @@ def get_asciiz(buf):
 def write_struct(f, fmt, ts):
 	f.write(struct.pack(fmt, *ts))
 	
+
+def read_bytes(f, n):
+	return [x for x in f.read(n)]
+	#return read_struct(f, '<B')[0]
+
+	
 def read_uint8(f):
 	return read_struct(f, '<B')[0]
 		
@@ -53,7 +60,8 @@ def write_ascii(f, s):
 	
 	
 def write_uint8(f, val):
-	return write_struct(f, '<B', (val,))
+	write_struct(f, '<B', (val,))
+	return 1
 	
 def write_uint16(f, val):
 	return write_struct(f, '<H', (val,))
@@ -64,3 +72,11 @@ def write_uint32(f, val):
 def write_int32(f, val):
 	return write_struct(f, '<i', (val,))
 	
+
+def write_bytes(f, bs):
+	i = 0
+	for b in bs:
+		assert 0 <= b < 256
+		write_uint8(f, b)
+		i += 1
+	return i

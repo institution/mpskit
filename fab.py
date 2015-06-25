@@ -87,8 +87,18 @@ def write_fab(f, data, verbose = 0):
 	
 	
 	
+def read_fab_unrestricted(fab_name):
+	f = open(fab_name, 'rb')
 	
-	
+	i = 0
+	while 1:
+		d = read_fab(f)
+		d.seek(0)
+		oname = '{}.{:03}.part'.format(fab_name,i)
+		open(oname, 'wb').write(d.read())
+		print(oname)
+		i += 1
+		
 	
 	
 	
@@ -98,21 +108,21 @@ def write_fab(f, data, verbose = 0):
 	
 
 	
-def read_fab(src, length, verbose = 0):
+def read_fab(src, length=None, verbose = 0):
 	"""	Decompress fab section
 	src -- file object
-	length -- uncompressed length
+	length -- uncompressed length, only for asserts
 	return -- uncompressed data as file object
 	"""
 	
 	dest = io.BytesIO()
 	
 	if not (src.read(3).decode('ascii') == 'FAB'):
-		raise Exception('fab_decode: header not found')
+		raise Error('fab_decode: header not found')
 	
 	shift_val = read_uint8(src)
 	if not (10 <= shift_val < 14):
-		raise Exception('fab_decode: invalid shift_val: {}'.format(shift_val))
+		raise Error('fab_decode: invalid shift_val: {}'.format(shift_val))
 	
 	if verbose:
 		print("shift_val = {}".format(shift_val))
@@ -225,6 +235,9 @@ def read_fab(src, length, verbose = 0):
 			
 			
 			j += 1
+		
+	if length is not None:	
+		assert length == j
 				
 	dest.seek(0)	
 	return dest

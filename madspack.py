@@ -1,6 +1,30 @@
 from io import BytesIO
 from common import *
-from fab import read_fab
+from fab import read_fab, write_fab
+
+
+"""
+MADSPACK format
+
+size repeat content          
+---------------------------------------------
+12          magic           MADSPACK 2.0
+2           ykhm            0x1A
+2           count (max 16)
+10   16     section_header
+     count  section
+
+
+section_header
+size repeat content          
+---------------------------------------------
+2			flags -- bit 0 set => fab compression
+4			size -- uncompressed size
+4			csize -- compressed size
+
+
+
+"""
 
 def read_madspack(f):
 	"""
@@ -19,18 +43,23 @@ def read_madspack(f):
 	
 	parts = []
 	for i in range(_count):
-		hash_ = read_uint16(header)
+		flag = read_uint16(header)
 		size = read_uint32(header)
 		compressed_size = read_uint32(header)
 		
-		if size == compressed_size:
+		if (flag & 1) == 0:
+			assert compressed_size == size
 			## no compression on this entry
 			data = BytesIO(f.read(size))
 			
-		else:
-			## compressed
+		elif (flag & 1) == 1:
+			assert compressed_size != size
+			## fab compressed
 			data = read_fab(f, size)
 			
+		else:
+			raise Error("madspack unknown mode = {}".format(mode))
+						
 		parts.append(data)
 		
 	return parts
@@ -57,6 +86,7 @@ def write_madspack(f, parts):
 		# ------------------------
 		f.seek(parts_pos)
 		
+		# without fab
 		f.write(parts[i].read())
 		size = f.tell() - parts_pos
 		
@@ -65,8 +95,8 @@ def write_madspack(f, parts):
 		# ------------------------
 		f.seek(header_pos)
 		
-		# hash?
-		write_uint16(f, 1)
+		# hash? mode?
+		write_uint16(f, 0)    # mode no_fab = 0, fab = 1
 		
 		# size
 		write_uint32(f, size)
