@@ -6,6 +6,7 @@ from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack
 from aa import read_aa, write_aa
+from ff import read_ff
 
 def call(fmt,cmd,arg1):
 	
@@ -75,12 +76,24 @@ def call(fmt,cmd,arg1):
 			print(usage)
 			sys.exit(1)
 		
+	
+	elif fmt == 'ff':
+		if cmd == 'unpack':			
+			read_ff(arg1)
+			
+		elif cmd == 'pack':
+			print('not implemented')
+						
+		else:
+			print(usage)
+			sys.exit(1)
+		
 	else:
 		raise External('invalid format specification')
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name] ...
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
 
 Rex Nebular file format decoder/encoder.
 license: Affero General Public License v3 or later
