@@ -1,41 +1,56 @@
 mpskit
 ======
 
+Microprose mads engine file format decoder/encoder for Rex Nebular.
+
+
 Installation
 ------------
 
 ```bash
+# install dependencies
+sudo apt-get install python3-pil
+
+# download and unzip 
 wget https://github.com/institution/mpskit/archive/master.zip
 unzip master.zip
+
+# allow execution
 cd mpskit-master
 chmod +x mpskit
 export PATH="$PATH:`pwd`"
+
+# test - should display usage and general information
+mpskit
 ```
 
 Usage example
 -------------
 
 ```bash
+# this line will add mpskit to PATH for current session 
+# replace "~/mpskit-master" with a path to directory where mpskit is located
+export PATH="$PATH:~/mpskit-master"
 
 # copy your REX
 cp ~/dosbox/REX . -r
 
-# unpack
+# unpacking
 cd REX
-python3 mpskit hag unpack GLOBAL.HAG
+mpskit hag unpack GLOBAL.HAG
 
 cd GLOBAL.HAG.dir
-python3 mpskit dat unpack MESSAGES.DAT
-python3 mpskit ss unpack *.SS
+mpskit dat unpack MESSAGES.DAT
+mpskit ss unpack *.SS
 
 # now you can modify generated txt and png files
 
-# pack
-python3 mpskit ss pack GRD1_2.SS
-python3 mpskit dat pack MESSAGES.DAT
+# packing
+mpskit ss pack GRD1_2.SS
+mpskit dat pack MESSAGES.DAT
 cd ..
 
-python3 mpskit hag pack GLOBAL.HAG
+mpskit hag pack GLOBAL.HAG
 cd ..
 
 ```
