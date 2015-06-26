@@ -4,13 +4,20 @@ from hag import read_madsconcat,write_madsconcat
 from dat import read_messagesdat,write_messagesdat
 from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
+from madspack import read_madspack, save_madspack
+
 
 def call(fmt,cmd,arg1):
+	
+	
 	if '/' in arg1:
 		raise External("path not allowed as argument; change directory and use file-name")
 	
 	if cmd not in ['pack','unpack']:
 		raise External("invalid command")
+	
+
+
 	
 	if fmt == 'dat':
 		
@@ -46,6 +53,16 @@ def call(fmt,cmd,arg1):
 			print(usage)
 			sys.exit(1)
 		
+	elif fmt == 'madspack':
+		if cmd == 'unpack':			
+			save_madspack(arg1, read_madspack(open(arg1, 'rb')))
+			
+		elif cmd == 'pack':
+			print('not implemented')
+			
+		else:
+			print(usage)
+			sys.exit(1)
 		
 	else:
 		raise External('invalid format specification')
@@ -61,16 +78,17 @@ This program is free software.'''
 
 
 def main():
-	if len(sys.argv) != 4:
+	if len(sys.argv) < 3:
 		print(usage)
 		sys.exit(1)
 		
 	fmt = sys.argv[1]
 	cmd = sys.argv[2]
-	arg1 = sys.argv[3]
+	args = sys.argv[3:]
 	
 	try:
-		call(fmt,cmd,arg1)
+		for arg in args:
+			call(fmt,cmd,arg)
 	except External as e:
 		print(usage)
 		print('ERROR', e)

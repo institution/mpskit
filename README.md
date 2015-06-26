@@ -26,10 +26,10 @@ python3 mpskit hag unpack GLOBAL.HAG
 
 cd GLOBAL.HAG.dir
 python3 mpskit dat unpack MESSAGES.DAT
-python3 mpskit ss unpack OB042.SS
+python3 mpskit ss unpack *.SS
 
 # pack
-python3 mpskit ss pack OB042.SS
+python3 mpskit ss pack *.SS
 python3 mpskit dat pack MESSAGES.DAT
 cd ..
 
@@ -41,7 +41,7 @@ cd ..
 Notes
 -----
 
-* While modifying unpacked png files use only colors already existiing in the image.
+* While modifying unpacked png files use only colors already existing in the image.
 
 License
 -------

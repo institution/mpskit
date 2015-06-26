@@ -51,7 +51,7 @@ def read_ss(f, ss_name):
 	253 len col       produce len * [col] pixels, read command
 
 	"""
-	verbose = 1
+	verbose = 0
 	
 	
 	parts = read_madspack(f)
@@ -304,7 +304,10 @@ def read_pallete(f):
 		rr,gg,bb,ind,u2,flags = reads(f, '6b')
 		r,g,b = map(vga_color_trans, [rr,gg,bb])
 
+
+		# TODO: not the case in SECTION5/RM505A8.SS
 		assert ind == -1
+		
 		pal.append((r,g,b))
 		
 	assert len(pal) == ncolors

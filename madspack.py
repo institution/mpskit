@@ -26,6 +26,13 @@ size repeat content
 
 """
 
+def save_madspack(madspack_name, parts):
+	for i,part in enumerate(parts):
+		part.seek(0)			
+		open("{}.{:03}.part".format(madspack_name, i), 'wb').write(part.read())
+		part.seek(0)
+			
+
 def read_madspack(f):
 	"""
 	f -- input stream
@@ -61,7 +68,7 @@ def read_madspack(f):
 			raise Error("madspack unknown mode = {}".format(mode))
 						
 		parts.append(data)
-		
+	
 	return parts
 		
 	
