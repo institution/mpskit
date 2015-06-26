@@ -29,14 +29,19 @@ size repeat content
 def save_madspack(madspack_name, parts):
 	for i,part in enumerate(parts):
 		part.seek(0)			
-		open("{}.{:03}.part".format(madspack_name, i), 'wb').write(part.read())
+		n = "{}.s{:02}.part".format(madspack_name, i)
+		open(n, 'wb').write(part.read())
 		part.seek(0)
+		print(n)
 			
 
-def read_madspack(f):
+def read_madspack(madspack_name):
 	"""
 	f -- input stream
 	"""
+	
+	f = open2(madspack_name, 'rb')
+	
 	magic = f.read(12).decode('ascii')
 	assert magic == 'MADSPACK 2.0', magic
 	
@@ -73,10 +78,12 @@ def read_madspack(f):
 		
 	
 
-def write_madspack(f, parts):
+def write_madspack(madspack_name, parts):
 	"""
 	f -- output stream
 	"""
+	f = open2(madspack_name, 'wb')
+	
 	write_ascii(f, 'MADSPACK 2.0')
 	write_uint16(f, 0x1A)
 	

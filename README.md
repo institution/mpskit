@@ -28,8 +28,10 @@ cd GLOBAL.HAG.dir
 python3 mpskit dat unpack MESSAGES.DAT
 python3 mpskit ss unpack *.SS
 
+# now you can modify generated txt and png files
+
 # pack
-python3 mpskit ss pack *.SS
+python3 mpskit ss pack GRD1_2.SS
 python3 mpskit dat pack MESSAGES.DAT
 cd ..
 
@@ -38,10 +40,12 @@ cd ..
 
 ```
 
-Notes
------
+Limitations
+-----------
 
-* While modifying unpacked png files use only colors already existing in the image.
+* While modifying unpacked png files use only colors already existing in the image
+* Do not change images dimensions
+
 
 License
 -------

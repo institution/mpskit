@@ -161,8 +161,6 @@ def write_ss(ss_name):
 	
 		
 
-class Header: 
-	pass
 	
 
 def save_sprite_header(sprite_name, h):
@@ -341,7 +339,41 @@ def write_sprite(head, data, header, img, rpal):
 	img -- image
 	rpal -- reversed pallete	
 	return -- size writen to data
+	
+	
+	Tiles are compressed with linemode|command encoding. Colors are stored
+	in indexed mode. Each pixel line begins with linemode. 
+
+	Linemodes/commands:
+	lm  cm            description
+	------------------------------------------------------------------------
+	255               fill rest of the line with bg color and read linemode
+
+	252               stop
+
+	254               pixel mode
+	254 255           fill rest of the line with bg color and read linemode
+	254 254 len col   produce len * [col] pixels, read command
+	254 col           produce [col] pixel, read command
+
+	253               multiple pixels mode
+	253 255           fill rest of the line with bg color and read linemode
+	253 len col       produce len * [col] pixels, read command
+
+	253 len col
+	
+	
 	"""
+
+	def get_index(x,y):
+		pix = img.getpixel((x,y))
+		if pix == (0,0,0,0):
+			# transparent background
+			return 0xFD
+		else:
+			col = pix[:3]
+			return rpal[col]
+	
 	
 	# 1x1 image is used instead of 0x0 image because 0x0 image cannot be represented as png
 	if img.size[0] > 1:
@@ -354,22 +386,26 @@ def write_sprite(head, data, header, img, rpal):
 	size = 0
 	for y in range(header.height):
 		
-		size += write_uint8(data, 254)     # pixel line mode
+		size += write_uint8(data, 253)     # multipixel line mode
 		
-		for x in range(header.width):
-			size += write_uint8(data, 254)     # len pixels
-			size += write_uint8(data, 1)     # len = 1
+		x = 0
+		while x < header.width:
 			
-			pix = img.getpixel((x,y))
-			if pix == (0,0,0,0):
-				# transparent background
-				size += write_uint8(data, 0xFD)
-			else:		
-				col = pix[:3]
-				ind = rpal[col]
-				size += write_uint8(data, ind)
+			ind0 = get_index(x,y)
+			length = 0
+			while x < header.width and length < 255:
+				ind = get_index(x,y)
+				if ind == ind0:
+					length += 1
+					x += 1
+				else:
+					break
+					
+			if length:
+				size += write_uint8(data, length)
+				size += write_uint8(data, ind0)
 			
-		size += write_uint8(data, 255)
+		size += write_uint8(data, 255)   # end of line
 			
 	size += write_uint8(data, 252)
 			
