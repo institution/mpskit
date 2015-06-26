@@ -68,3 +68,7 @@ Contact
 -------
 sta256+mpskit at gmail.com
 
+Thanks to
+---------
+ScummVM Project (http://scummvm.org/)
+
