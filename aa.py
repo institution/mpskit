@@ -25,23 +25,21 @@ def read_aa(aa_name):
 	h = read_aa_header(aa_name)
 	save_aa_header(aa_name, h)
 
-	msgs = read_aa_messages(aa_name, h.msg_count)
-	save_aa_messages(aa_name, msgs)
+	if len(parts) > 1:
+		msgs = read_aa_messages(aa_name, h.msg_count)
+		save_aa_messages(aa_name, msgs)
 
 
 def write_aa(aa_name):
-	part0 = open("{}.s00.part".format(aa_name), 'rb')
+	parts = load_madspack(aa_name)
 	
-	part1 = BytesIO()	
-	write_aa_messages(part1, load_aa_messages(aa_name))
-	part1.seek(0)
+	if len(parts) > 1:
+		part1 = BytesIO()	
+		write_aa_messages(part1, load_aa_messages(aa_name))
+		part1.seek(0)
+		parts[1] = part1
 	
-	part2 = open("{}.s02.part".format(aa_name), 'rb')
-	
-	part3 = open("{}.s03.part".format(aa_name), 'rb')
-	
-	write_madspack(aa_name, [part0, part1, part2, part3])
-	
+	write_madspack(aa_name, parts)		
 	print(aa_name)
 	
 	
@@ -111,7 +109,7 @@ def read_aa_message(f):
 	
 	
 def save_aa_messages(aa_name, msgs):
-	n = aa_name+'.s01.json'
+	n = aa_name+'.msg.json'
 	open(n, 'w').write(
 		json.dumps(
 			[msg.as_list() for msg in msgs], 
@@ -121,7 +119,7 @@ def save_aa_messages(aa_name, msgs):
 	print(n)
 
 def load_aa_messages(aa_name):
-	n = aa_name+'.s01.json'
+	n = aa_name+'.msg.json'
 	xs = json.loads(
 		open(n,'r').read()
 	)

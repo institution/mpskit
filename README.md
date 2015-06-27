@@ -56,6 +56,42 @@ cd ..
 
 ```
 
+Changing AA messages:
+```
+# unpack
+mpskit hag unpack SECTION9.HAG
+cd SECTION9.HAG.dir
+mpskit aa unpack RM951A.AA
+```
+
+Now in RM951A.AA.msg.json change
+```json
+    [
+      "msg",
+      "Just give me my money and I'll be on my way.\u0000\u0000\u0000\u0000\u00f8\u0019\u00ac\u00ae\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000e\u0080f"
+    ],
+```
+to
+```json
+    [
+      "msg",
+      "Hello, Kitty! Give me my money and I'll be on my way."
+    ],
+```
+
+Back to console
+```
+# pack again
+mpskit aa pack RM964A.AA
+cd ..
+mpskit hag pack SECTION9.HAG
+```
+
+Now when you run REX the intro dialog will be changed!
+
+RM951A.AA.
+
+
 Limitations
 -----------
 
