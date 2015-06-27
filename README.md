@@ -18,7 +18,7 @@ unzip master.zip
 cd mpskit-master
 chmod +x mpskit
 
-# install in system path
+# install in system path (optional)
 sudo ln -s `pwd`/mpskit /usr/local/bin/mpskit
 
 # test - should display usage
@@ -52,11 +52,10 @@ Usage examples
 
 	# unpack
 	mpskit hag unpack SECTION9.HAG
-	cd SECTION9.HAG.dir
-	mpskit aa unpack RM951A.AA
+	mpskit aa unpack SECTION9.HAG.dir/RM951A.AA
 
 
-Now in `RM951A.AA.msg.json` change
+Now in `SECTION9.HAG.dir/RM951A.AA.msg.json` change
 
     [
       "msg",
@@ -74,8 +73,7 @@ to
 Back to console
 
 	# pack again
-	mpskit aa pack RM951A.AA
-	cd ..
+	mpskit aa pack SECTION9.HAG.dir/RM951A.AA
 	mpskit hag pack SECTION9.HAG
 
 

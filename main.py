@@ -7,89 +7,95 @@ from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
 from ff import read_ff
+import os, sys
 
-def call(fmt,cmd,arg1):
+def call(fmt,cmd,path):
 	
+	odd = os.getcwd()
 	
-	if '/' in arg1:
-		raise External("path not allowed as argument; change directory and use file-name")
+	ndd,arg1 = os.path.split(path)
 	
-	if cmd not in ['pack','unpack']:
-		raise External("invalid command")
-	
-
-
-	
-	if fmt == 'dat':
+	os.chdir(ndd)
+	try:
 		
-		if cmd == 'unpack':
-			read_messagesdat(open(arg1, 'rb'), arg1)
-		elif cmd == 'pack':
-			write_messagesdat(open(arg1, 'wb'), arg1)
-		
-	elif fmt == 'hag':
-	
-		if cmd == 'unpack':
-			read_madsconcat(open(arg1, 'rb'), arg1)
-		elif cmd == 'pack':
-			write_madsconcat(arg1)
-	
-	
-	elif fmt == 'ss':
-		if cmd == 'unpack':
-			read_ss(open(arg1, 'rb'), arg1)
-		elif cmd == 'pack':
-			write_ss(arg1)
-		else:
-			print(usage)
+		if cmd not in ['pack','unpack']:
+			print('invalid command; use "pack" or "unpack"')
 			sys.exit(1)
+		
+		
+		if fmt == 'dat':
 			
-	elif fmt == 'fab':
-		if cmd == 'unpack':
-			read_fab_unrestricted(arg1)			
-		elif cmd == 'pack':
-			print("fab compression? what for?")
-			# write_fab_unrestricted(arg1)		
-		else:
-			print(usage)
-			sys.exit(1)
-		
-	elif fmt == 'madspack':
-		if cmd == 'unpack':			
-			save_madspack(arg1, read_madspack(open(arg1, 'rb')))
+			if cmd == 'unpack':
+				read_messagesdat(open(arg1, 'rb'), arg1)
+			elif cmd == 'pack':
+				write_messagesdat(open(arg1, 'wb'), arg1)
 			
-		elif cmd == 'pack':
-			write_madspack(arg1, load_madspack(arg1))
-						
-		else:
-			print(usage)
-			sys.exit(1)
-	
-	elif fmt == 'aa':
-		if cmd == 'unpack':			
-			read_aa(arg1)
-			
-		elif cmd == 'pack':
-			write_aa(arg1)
-						
-		else:
-			print(usage)
-			sys.exit(1)
+		elif fmt == 'hag':
 		
-	
-	elif fmt == 'ff':
-		if cmd == 'unpack':			
-			read_ff(arg1)
-			
-		elif cmd == 'pack':
-			print('not implemented')
-						
-		else:
-			print(usage)
-			sys.exit(1)
+			if cmd == 'unpack':
+				read_madsconcat(open(arg1, 'rb'), arg1)
+			elif cmd == 'pack':
+				write_madsconcat(arg1)
 		
-	else:
-		raise External('invalid format specification')
+		
+		elif fmt == 'ss':
+			if cmd == 'unpack':
+				read_ss(open(arg1, 'rb'), arg1)
+			elif cmd == 'pack':
+				write_ss(arg1)
+			else:
+				print(usage)
+				sys.exit(1)
+				
+		elif fmt == 'fab':
+			if cmd == 'unpack':
+				read_fab_unrestricted(arg1)			
+			elif cmd == 'pack':
+				print("fab compression? what for?")
+				# write_fab_unrestricted(arg1)		
+			else:
+				print(usage)
+				sys.exit(1)
+			
+		elif fmt == 'madspack':
+			if cmd == 'unpack':			
+				save_madspack(arg1, read_madspack(open(arg1, 'rb')))
+				
+			elif cmd == 'pack':
+				write_madspack(arg1, load_madspack(arg1))
+							
+			else:
+				print(usage)
+				sys.exit(1)
+		
+		elif fmt == 'aa':
+			if cmd == 'unpack':			
+				read_aa(arg1)
+				
+			elif cmd == 'pack':
+				write_aa(arg1)
+							
+			else:
+				print(usage)
+				sys.exit(1)
+			
+		
+		elif fmt == 'ff':
+			if cmd == 'unpack':			
+				read_ff(arg1)
+				
+			elif cmd == 'pack':
+				print('not implemented')
+							
+			else:
+				print(usage)
+				sys.exit(1)
+			
+		else:
+			raise External('invalid format specification')
+			
+	finally:
+		os.chdir(odd)
 		
 				
 
