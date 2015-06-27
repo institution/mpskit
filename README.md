@@ -73,12 +73,17 @@ Back to console
 Now when you run REX the intro dialog will be changed!
 
 
-### Adding new letter to font [UNSTABLE!!!] ###
+### Adding new letter to font ###
+
 
 	cd GLOBAL.HAG.dir
 	mpskit ff unpack FONTCONV.FF
 	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
+	
+	# edit your new letter but do not insert new colors to the image
+	# modifying image width is ok
 	gimp FONTCONV.FF.001.png
+		
 	mpskit ff pack FONTCONV.FF
 	mpskit hag pack ../GLOBAL.HAG
 	
