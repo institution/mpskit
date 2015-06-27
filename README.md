@@ -25,70 +25,67 @@ export PATH="$PATH:`pwd`"
 mpskit
 ```
 
-Usage example
--------------
+Usage examples
+--------------
 
 ### General usage ###
 
-```bash
-# this line will add mpskit to PATH for current session 
-# replace "~/mpskit-master" with a path to directory where mpskit is located
-export PATH="$PATH:~/mpskit-master"
+	# this line will add mpskit to PATH for current session 
+	# replace "~/mpskit-master" with a path to directory where mpskit is located
+	export PATH="$PATH:~/mpskit-master"
 
-# copy your REX
-cp ~/dosbox/REX . -r
+	# copy your REX
+	cp ~/dosbox/REX . -r
 
-# unpacking
-cd REX
-mpskit hag unpack GLOBAL.HAG
+	# unpacking
+	cd REX
+	mpskit hag unpack GLOBAL.HAG
 
-cd GLOBAL.HAG.dir
-mpskit dat unpack MESSAGES.DAT
-mpskit ss unpack *.SS
+	cd GLOBAL.HAG.dir
+	mpskit dat unpack MESSAGES.DAT
+	mpskit ss unpack *.SS
 
-# now you can modify generated txt and png files
+	# now you can modify generated txt and png files
 
-# packing
-mpskit ss pack GRD1_2.SS
-mpskit dat pack MESSAGES.DAT
-cd ..
+	# packing
+	mpskit ss pack GRD1_2.SS
+	mpskit dat pack MESSAGES.DAT
+	cd ..
 
-mpskit hag pack GLOBAL.HAG
-cd ..
+	mpskit hag pack GLOBAL.HAG
+	cd ..
 
-```
 
 ### Changing AA messages ###
 
-```
-# unpack
-mpskit hag unpack SECTION9.HAG
-cd SECTION9.HAG.dir
-mpskit aa unpack RM951A.AA
-```
+	# unpack
+	mpskit hag unpack SECTION9.HAG
+	cd SECTION9.HAG.dir
+	mpskit aa unpack RM951A.AA
 
-Now in RM951A.AA.msg.json change
-```json
+
+Now in `RM951A.AA.msg.json` change
+
     [
       "msg",
       "\"Here it is, Stone.\u0000\u00fd'++\b\u0006\u0006\u00fe\u0004*)\u00fe\u0004*\u00fe\u0004\u001a\u0016\u001d\u0004\u0018\u0016\u0017\u0017\u0017\u0019\u0007\u00ff\u00fe\u00fe\u0005\u00fd\u0002\u0006\u000e\t\b\u00fe\u0004)*)\u00fe\u0004"
     ],
-```
+
 to
-```json
+
     [
       "msg",
       "\"Hello, Kitty!"      
     ],
-```
+
 
 Back to console
-```
-# pack again
-mpskit aa pack RM951A.AA
-cd ..
-mpskit hag pack SECTION9.HAG
-```
+
+	# pack again
+	mpskit aa pack RM951A.AA
+	cd ..
+	mpskit hag pack SECTION9.HAG
+
 
 Now when you run REX the intro dialog will be changed!
 
@@ -119,7 +116,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Contact
 -------
-`Institution` <sta256+mpskit at gmail.com>
+Institution, sta256+mpskit at gmail.com
 
 Thanks to
 ---------
