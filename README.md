@@ -21,7 +21,7 @@ cd mpskit-master
 chmod +x mpskit
 export PATH="$PATH:`pwd`"
 
-# test - should display usage and general information
+# test - should display usage
 mpskit
 ```
 
