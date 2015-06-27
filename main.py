@@ -106,7 +106,7 @@ def call(fmt,cmd,path):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
 '''
 
 
