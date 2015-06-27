@@ -9,6 +9,7 @@ import _io, sys
 class Error(Exception): pass
 class External(Error): pass
 
+g_curr_dir = ''
 
 def open2(name,flags):
 	if isinstance(name,_io._IOBase):		
@@ -16,7 +17,9 @@ def open2(name,flags):
 	else:
 		return open(name,flags)
 
-		
+def output(fname):
+	print(os.path.join(g_curr_dir, fname))
+	
 
 
 def read_idstring(f, idstring):

@@ -52,7 +52,7 @@ def save_madspack(madspack_name, parts):
 		n = "{}.s{:02}.part".format(madspack_name, i)
 		open(n, 'wb').write(part.read())
 		part.seek(0)
-		print(n)
+		output(n)
 			
 
 def read_madspack(madspack_name):
@@ -140,3 +140,5 @@ def write_madspack(madspack_name, parts):
 		write_uint32(f, size)
 		
 		header_pos = f.tell()
+	
+	output(madspack_name)

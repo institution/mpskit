@@ -48,7 +48,7 @@ def write_aa(aa_name):
 			print('aa messages modified')
 	
 	write_madspack(aa_name, parts)		
-	print(aa_name)
+	output(aa_name)
 	
 	
 
@@ -125,7 +125,7 @@ def save_aa_messages(aa_name, msgs):
 			indent=2
 		)
 	)
-	print(n)
+	output(n)
 
 def load_aa_messages(aa_name):
 	n = aa_name+'.msg.json'
@@ -147,7 +147,7 @@ def load_aa_messages(aa_name):
 def save_aa_header(aa_name, h):
 	n = aa_name+'.s00.json'
 	open(n, 'w').write(json.dumps(h.as_list(), indent=2))
-	print(n)
+	output(n)
 		
 		
 

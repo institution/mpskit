@@ -8,6 +8,7 @@ from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
 from ff import read_ff
 import os, sys
+import common
 
 def call(fmt,cmd,path):
 	
@@ -15,7 +16,12 @@ def call(fmt,cmd,path):
 	
 	ndd,arg1 = os.path.split(path)
 	
-	os.chdir(ndd)
+	
+	common.g_curr_dir = ndd
+	
+	if ndd:
+		os.chdir(ndd)
+		
 	try:
 		
 		if cmd not in ['pack','unpack']:
@@ -85,7 +91,7 @@ def call(fmt,cmd,path):
 				read_ff(arg1)
 				
 			elif cmd == 'pack':
-				print('not implemented')
+				write_ff(arg1)
 							
 			else:
 				print(usage)
@@ -96,6 +102,7 @@ def call(fmt,cmd,path):
 			
 	finally:
 		os.chdir(odd)
+		common.g_curr_dir = ''
 		
 				
 

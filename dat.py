@@ -11,7 +11,7 @@ def read_messagesdat(f, fname, verbose = 0):
 	
 	oname = '{}.txt'.format(fname)
 	g = open(oname, 'w')
-	print(oname)
+	output(oname)
 	
 	
 	# number of entries
@@ -51,7 +51,7 @@ def write_messagesdat(f, fname):
 	
 	uname = '{}.txt'.format(fname)
 	g = open(uname, 'r')
-	print(fname)
+	
 	
 	msgs = [x.strip().replace('|', '\x00') for x in g.readlines()]
 	
@@ -82,7 +82,9 @@ def write_messagesdat(f, fname):
 
 		
 		sid += 1
-		
+	
+	
+	output(fname)	
 		
 
 '''

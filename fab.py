@@ -96,7 +96,7 @@ def read_fab_unrestricted(fab_name):
 		d.seek(0)
 		oname = '{}.f{:03}.part'.format(fab_name,i)
 		open(oname, 'wb').write(d.read())
-		print(oname)
+		output(oname)
 		i += 1
 		
 	

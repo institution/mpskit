@@ -11,8 +11,8 @@ def read_madsconcat(f, fname):
 	if not os.path.exists(output_path):
 		os.mkdir(output_path)
 	
-	print(output_path)
-	print(lst_name)
+	output(output_path)
+	output(lst_name)
 	with open(lst_name, 'w') as lst_file:
 		# idstring
 		read_idstring(f, b"MADSCONCAT 1.0\x1A\x00")
@@ -75,4 +75,4 @@ def write_madsconcat(fname):
 	
 	
 	f.close()
-	print(fname)
+	output(fname)
