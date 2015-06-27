@@ -154,6 +154,8 @@ class Record:
 		return self._inner.items()
 		
 	def as_list(self):
+		return self.__dict__['_inner']
+		
 		ls = []
 		for k,v in self.items():
 			ls.append((k,v))
@@ -162,7 +164,7 @@ class Record:
 	@classmethod
 	def from_list(Cls, kvs):
 		r = Cls()
-		for k,v in kvs:			
+		for k,v in kvs.items():
 			r[k] = v
 		return r
 

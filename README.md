@@ -3,7 +3,7 @@ mpskit
 
 Microprose mads engine file format decoder/encoder for Rex Nebular and other games.
 
-Version 0.9.0
+Version 0.9.1
 
 Installation
 ------------
@@ -55,20 +55,13 @@ Usage examples
 	mpskit aa unpack SECTION9.HAG.dir/RM951A.AA
 
 
-Now in `SECTION9.HAG.dir/RM951A.AA.msg.json` change
-
-    [
-      "msg",
-      "\"Here it is, Stone.\u0000\u00fd'++\b\u0006\u0006\u00fe\u0004*)\u00fe\u0004*\u00fe\u0004\u001a\u0016\u001d\u0004\u0018\u0016\u0017\u0017\u0017\u0019\u0007\u00ff\u00fe\u00fe\u0005\u00fd\u0002\u0006\u000e\t\b\u00fe\u0004)*)\u00fe\u0004"
-    ],
-
-to
-
-    [
-      "msg",
-      "\"Hello, Kitty!"      
-    ],
-
+Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
+	
+	change this:
+	"msg": "\"Here it is, Stone."
+	
+	to this:
+	"msg": "\"Hello, Kitty!"      
 
 Back to console
 
@@ -80,7 +73,7 @@ Back to console
 Now when you run REX the intro dialog will be changed!
 
 
-### Adding new letter to font ###
+### Adding new letter to font [UNSTABLE!!!] ###
 
 	cd GLOBAL.HAG.dir
 	mpskit ff unpack FONTCONV.FF
