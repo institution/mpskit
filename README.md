@@ -12,14 +12,14 @@ Installation
 # install dependencies
 sudo apt-get install python3-pil
 
-# download and unzip 
+# download
 wget https://github.com/institution/mpskit/archive/master.zip
 unzip master.zip
-
-# allow execution
 cd mpskit-master
 chmod +x mpskit
-export PATH="$PATH:`pwd`"
+
+# install in system path
+sudo ln -s `pwd`/mpskit /usr/local/bin/mpskit
 
 # test - should display usage
 mpskit
@@ -29,13 +29,6 @@ Usage examples
 --------------
 
 ### General usage ###
-
-	# this line will add mpskit to PATH for current session 
-	# replace "~/mpskit-master" with a path to directory where mpskit is located
-	export PATH="$PATH:~/mpskit-master"
-
-	# copy your REX
-	cp ~/dosbox/REX . -r
 
 	# unpacking
 	cd REX
@@ -53,8 +46,7 @@ Usage examples
 	cd ..
 
 	mpskit hag pack GLOBAL.HAG
-	cd ..
-
+	
 
 ### Changing AA messages ###
 
