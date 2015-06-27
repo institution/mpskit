@@ -1,8 +1,9 @@
 mpskit
 ======
 
-Microprose mads engine file format decoder/encoder for Rex Nebular.
+Microprose mads engine file format decoder/encoder for Rex Nebular and other games.
 
+Version 0.8
 
 Installation
 ------------
@@ -81,9 +82,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Contact
 -------
-sta256+mpskit at gmail.com
+`Institution` <sta256+mpskit at gmail.com>
 
 Thanks to
 ---------
 ScummVM Project (http://scummvm.org/)
+
+
+
+
+
+
 

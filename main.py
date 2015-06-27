@@ -93,13 +93,8 @@ def call(fmt,cmd,arg1):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
-
-Rex Nebular file format decoder/encoder.
-license: Affero General Public License v3 or later
-written by: `Institution` (sta256+mpskit at gmail.com)
-See README.md and LICENSE for more details.
-This program is free software.'''
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
+'''
 
 
 def main():
