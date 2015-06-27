@@ -1,5 +1,5 @@
 from common import *
-from madspack import read_madspack, write_madspack
+from madspack import read_madspack, write_madspack, save_madspack
 from collections import namedtuple
 from PIL import Image, ImageDraw
 from fab import read_fab
@@ -11,7 +11,7 @@ def read_ss(f, ss_name):
 	"""
 	SS file is a MADSPACK file with 4 parts:
 
-	* part 1
+	* part 0
 		header
 			mode -- part3 encoding
 				0 -- linemode
@@ -20,14 +20,14 @@ def read_ss(f, ss_name):
 			size -- size of part3
 		
 		
-	* part 2
+	* part 1
 		is composed of tile_headers, there can be many tiles in one file 
 		ntiles = len(part2) / 0x00000010
 
-	* part 3
+	* part 2
 		palette
 		
-	* part 4	
+	* part 3	
 		image data, may contain many tiles
 
 
@@ -56,15 +56,7 @@ def read_ss(f, ss_name):
 	
 	parts = read_madspack(f)
 	
-	
-	for i in range(len(parts)):
-		oname = '{}.s{:02}.part'.format(ss_name, i)
-		print(oname)
-		part = parts[i]
-		
-		open(oname, 'wb').write(part.read())
-		part.seek(0)
-		
+	save_madspack(ss_name, parts)
 		
 	ss_header = read_ss_header(parts[0])
 	
@@ -120,7 +112,7 @@ def write_ss(ss_name):
 	
 	
 	# pallete
-	part2 = open('{}.s{:02}.part'.format(ss_name, 2), 'rb')
+	part2 = open('{}.s02.part'.format(ss_name), 'rb')
 	
 	pal = read_pallete(part2)
 	

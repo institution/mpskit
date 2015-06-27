@@ -4,7 +4,7 @@ from hag import read_madsconcat,write_madsconcat
 from dat import read_messagesdat,write_messagesdat
 from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
-from madspack import read_madspack, save_madspack
+from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
 from ff import read_ff
 
@@ -59,8 +59,8 @@ def call(fmt,cmd,arg1):
 			save_madspack(arg1, read_madspack(open(arg1, 'rb')))
 			
 		elif cmd == 'pack':
-			print('not implemented')
-			
+			write_madspack(arg1, load_madspack(arg1))
+						
 		else:
 			print(usage)
 			sys.exit(1)

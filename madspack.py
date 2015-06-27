@@ -26,6 +26,19 @@ size repeat content
 
 """
 
+def load_madspack(madspack_name):
+	parts = []
+	i = 0
+	while i < 16:
+		n = "{}.s{:02}.part".format(madspack_name, i)
+		if not os.path.exists(n):
+			break
+		parts.append(open(n, 'rb'))
+		i += 1
+		
+	return parts
+	
+
 def save_madspack(madspack_name, parts):
 	for i,part in enumerate(parts):
 		part.seek(0)			
