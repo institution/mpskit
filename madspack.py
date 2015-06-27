@@ -122,6 +122,7 @@ def write_madspack(madspack_name, parts):
 		f.seek(parts_pos)
 		
 		# without fab
+		parts[i].seek(0)
 		f.write(parts[i].read())
 		size = f.tell() - parts_pos
 		

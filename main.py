@@ -6,7 +6,7 @@ from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
-from ff import read_ff
+from ff import read_ff, write_ff
 import os, sys
 import common
 

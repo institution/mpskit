@@ -3,7 +3,7 @@ mpskit
 
 Microprose mads engine file format decoder/encoder for Rex Nebular and other games.
 
-Version 0.8.3
+Version 0.9.0
 
 Installation
 ------------
@@ -84,7 +84,7 @@ Now when you run REX the intro dialog will be changed!
 
 	cd GLOBAL.HAG.dir
 	mpskit ff unpack FONTCONV.FF
-	cp FONTCONV.FF.033.png FONTCONV.FF.001.png
+	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
 	gimp FONTCONV.FF.001.png
 	mpskit ff pack FONTCONV.FF
 	mpskit hag pack ../GLOBAL.HAG
@@ -96,8 +96,6 @@ Limitations
 -----------
 
 * While modifying unpacked png files use only colors already existing in the image
-* Do not change images dimensions
-
 
 License
 -------
