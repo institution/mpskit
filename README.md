@@ -28,6 +28,8 @@ mpskit
 Usage example
 -------------
 
+### General usage ###
+
 ```bash
 # this line will add mpskit to PATH for current session 
 # replace "~/mpskit-master" with a path to directory where mpskit is located
@@ -56,7 +58,8 @@ cd ..
 
 ```
 
-Changing AA messages:
+### Changing AA messages ###
+
 ```
 # unpack
 mpskit hag unpack SECTION9.HAG
@@ -68,28 +71,26 @@ Now in RM951A.AA.msg.json change
 ```json
     [
       "msg",
-      "Just give me my money and I'll be on my way.\u0000\u0000\u0000\u0000\u00f8\u0019\u00ac\u00ae\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000e\u0080f"
+      "\"Here it is, Stone.\u0000\u00fd'++\b\u0006\u0006\u00fe\u0004*)\u00fe\u0004*\u00fe\u0004\u001a\u0016\u001d\u0004\u0018\u0016\u0017\u0017\u0017\u0019\u0007\u00ff\u00fe\u00fe\u0005\u00fd\u0002\u0006\u000e\t\b\u00fe\u0004)*)\u00fe\u0004"
     ],
 ```
 to
 ```json
     [
       "msg",
-      "Hello, Kitty! Give me my money and I'll be on my way."
+      "\"Hello, Kitty!"      
     ],
 ```
 
 Back to console
 ```
 # pack again
-mpskit aa pack RM964A.AA
+mpskit aa pack RM951A.AA
 cd ..
 mpskit hag pack SECTION9.HAG
 ```
 
 Now when you run REX the intro dialog will be changed!
-
-RM951A.AA.
 
 
 Limitations

@@ -1,5 +1,5 @@
 from common import *
-from madspack import read_madspack, save_madspack, write_madspack
+from madspack import read_madspack, save_madspack, write_madspack, load_madspack
 """
 AA file format
 
@@ -16,10 +16,13 @@ Section 3: Misc
 
 
 """
+verbose = 0
+
 def read_aa(aa_name):
 	assert aa_name.endswith('.AA')
 	
 	parts = read_madspack(aa_name)
+	assert len(parts) >= 1
 	save_madspack(aa_name, parts)
 	
 	h = read_aa_header(aa_name)
@@ -33,11 +36,16 @@ def read_aa(aa_name):
 def write_aa(aa_name):
 	parts = load_madspack(aa_name)
 	
+	if verbose:
+		print(len(parts))
+	
 	if len(parts) > 1:
 		part1 = BytesIO()	
 		write_aa_messages(part1, load_aa_messages(aa_name))
 		part1.seek(0)
 		parts[1] = part1
+		if verbose:
+			print('aa messages modified')
 	
 	write_madspack(aa_name, parts)		
 	print(aa_name)
@@ -65,7 +73,8 @@ def write_aa_messages(f, ms):
 def write_aa_message(f, m):
 	i = 0
 	i += write_sint16(f, m.sound_id)
-	assert "\u0000" in m.msg, repr(m.msg)
+	if len(m.msg) >= 64:
+		assert "\u0000" in m.msg, repr(m.msg)
 	i += write_string(f, 64, m.msg)	
 	i += write_string(f, 4, m.unk1)	
 	i += write_sint16(f, m.pos_x)

@@ -2,7 +2,7 @@ from io import BytesIO
 import json
 import struct, os, os.path, sys, io
 from collections import OrderedDict
-import _io
+import _io, sys
 
 
 
@@ -113,7 +113,9 @@ def write_ascii(f, s):
 		write_uint8(f, b)
 
 def write_string(f, n, s):
-	assert len(s) <= n
+	if len(s) > n:
+		print('ERROR: string too long (must be < {}):'.format(n), s)
+		sys.exit(2)
 		
 	for ch in s:
 		byte = ord(ch)

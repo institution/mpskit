@@ -25,6 +25,7 @@ size repeat content
 
 
 """
+verbose = 0
 
 def load_madspack(madspack_name):
 	parts = []
@@ -32,9 +33,15 @@ def load_madspack(madspack_name):
 	while i < 16:
 		n = "{}.s{:02}.part".format(madspack_name, i)
 		if not os.path.exists(n):
+			if verbose:
+				print('load madspack: file not found:', n)
 			break
 		parts.append(open(n, 'rb'))
 		i += 1
+	
+	if i == 0:
+		print('ERROR: no parts to load')
+		sys.exit(2)
 		
 	return parts
 	
@@ -59,9 +66,10 @@ def read_madspack(madspack_name):
 	assert magic == 'MADSPACK 2.0', magic
 	
 	
+	
+	
 	f.seek(14)
 	_count = read_uint16(f)    # num of parts
-	
 	
 	header = io.BytesIO(f.read(0xA0))   # max 16 parts
 	header.seek(0)
