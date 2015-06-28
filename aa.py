@@ -73,10 +73,8 @@ def write_aa_messages(f, ms):
 def write_aa_message(f, m):
 	i = 0
 	i += write_sint16(f, m.sound_id)
-	if len(m.msg) >= 64:
-		assert "\u0000" in m.msg, repr(m.msg)
-	i += write_string(f, 64, m.msg)	
-	i += write_string(f, 4, m.unk1)	
+	i += write_raw(f, 64, encode_string(m.msg, null_term=True, max_len= 64, fill=True))	
+	i += write_raw(f, 4, encode_buffer(m.unk1))
 	i += write_sint16(f, m.pos_x)
 	i += write_sint16(f, m.pos_y)
 	i += write_uint16(f, m.flags)
@@ -86,11 +84,11 @@ def write_aa_message(f, m):
 	i += write_uint8(f, m.r2)
 	i += write_uint8(f, m.g2)
 	i += write_uint8(f, m.b2)
-	i += write_string(f, 2, m.unk2)
-	i += write_string(f, 6, m.unk3)
+	i += write_raw(f, 2, encode_buffer(m.unk2))
+	i += write_raw(f, 6, encode_buffer(m.unk3))
 	i += write_uint16(f, m.start_frame)
 	i += write_uint16(f, m.end_frame)
-	i += write_string(f, 2, m.unk4)
+	i += write_raw(f, 2, encode_buffer(m.unk4))
 	return i
 	
 	
@@ -98,8 +96,8 @@ def write_aa_message(f, m):
 def read_aa_message(f):
 	m = Record()	
 	m.sound_id = read_sint16(f)
-	m.msg = read_string(f, 64)	
-	m.unk1 = read_string(f, 4)	
+	m.msg = decode_string(read_raw(f, 64), null_term=True)
+	m.unk1 = decode_buffer(read_raw(f, 4))
 	m.pos_x = read_sint16(f)
 	m.pos_y = read_sint16(f)
 	m.flags = read_uint16(f)
@@ -109,11 +107,11 @@ def read_aa_message(f):
 	m.r2 = read_uint8(f)
 	m.g2 = read_uint8(f)
 	m.b2 = read_uint8(f)
-	m.unk2 = read_string(f, 2)
-	m.unk3 = read_string(f, 6)
+	m.unk2 = decode_buffer(read_raw(f, 2))
+	m.unk3 = decode_buffer(read_raw(f, 6))
 	m.start_frame = read_uint16(f)
 	m.end_frame = read_uint16(f)
-	m.unk4 = read_string(f, 2)
+	m.unk4 = decode_buffer(read_raw(f, 2))
 	return m
 	
 	
@@ -166,26 +164,28 @@ def read_aa_header(aa_name):
 	h.char_spacing = read_sint16(f)
 	h.bg_type = read_uint16(f)
 	h.room_number = read_uint16(f)
-	h.unk1 = read_string(f,2)
+	h.unk1 = decode_buffer(read_raw(f,2))
 	h.auto_flag = read_uint16(f)
 	h.sprites_index = read_uint16(f)
 	h.scroll_pos_x = read_sint16(f)
 	h.scroll_pos_y = read_sint16(f)
-	h.scroll = read_uint32(f)	
-	h.unk2 = read_string(f,6)
+	h.scroll = read_uint32(f)
+	h.unk2 = decode_buffer(read_raw(f,6))
 	
-	h.background_file = read_string(f, 13)
+	h.background_file = decode_string(read_raw(f, 13), null_term=True)
 	
 	h.sprite_set_names = []
 	for i in range(50):
-		name = read_string(f, 13)		
+		name_raw = read_raw(f, 13)
 		if i < h.sprite_sets_count:
-			h.sprite_set_names.append(name)
+			h.sprite_set_names.append(
+				decode_string(name_raw, null_term=True)
+			)
 	
-	h.sound_name = read_string(f, 13)
-	h.unk_name = read_string(f, 13)
-	h.dsr_name = read_string(f, 13)
-	h.font_resource = read_string(f, 13)
+	h.sound_name = decode_string(read_raw(f, 13), null_term=True)
+	h.unk_name = decode_string(read_raw(f, 13), null_term=True)
+	h.dsr_name = decode_string(read_raw(f, 13), null_term=True)
+	h.font_resource = decode_string(read_raw(f, 13), null_term=True)
 
 	h.unk3 = read_uint8(f)
 

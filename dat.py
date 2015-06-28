@@ -3,16 +3,24 @@ from fab import *
 
 
 
+def save_mdat_messages(mdat_name, h):
+	oname = "{}.msg.json".format(mdat_name)
+	with open(oname, 'w') as f:
+		json.dump(h, f, indent=2)
+	output(oname)
+
+def load_mdat_messages(mdat_name):
+	with open("{}.msg.json".format(mdat_name), 'r') as f:
+		return json.load(f)
+	
 
 
-def read_messagesdat(f, fname, verbose = 0):
+def read_mdat(f, fname, verbose = 0):
 	
 	assert fname == 'MESSAGES.DAT'
 	
-	oname = '{}.txt'.format(fname)
-	g = open(oname, 'w')
-	output(oname)
 	
+	entries = []
 	
 	# number of entries
 	num = read_uint16(f)
@@ -33,56 +41,53 @@ def read_messagesdat(f, fname, verbose = 0):
 		
 		dest = read_fab(f, length)
 		
-		try:
-			entry = ''.join([x.decode('ascii') for x in dest])
-			entry = entry.replace('\x00', '|')
-		except:
-			print(dest)
-			raise
-			
-		
-			
-		# lst entry
-		g.write(entry+'\n')
+		entry = decode_string(dest.read())
+		entries.append(entry)
+	
+	
+	save_mdat_messages(fname, entries)
 
 
-def write_messagesdat(f, fname):
+def write_mdat(f, fname, verbose=0):
 	assert fname == 'MESSAGES.DAT'
 	
-	uname = '{}.txt'.format(fname)
-	g = open(uname, 'r')
+	messages = load_mdat_messages(fname)
 	
 	
-	msgs = [x.strip().replace('|', '\x00') for x in g.readlines()]
 	
-	# num
+	#
+	msgs = [encode_string(s, null_term=True) for s in messages]
 	num = len(msgs)
-	write_uint16(f, num)
-	if verbose:
-		print('write_messagesdat: num={}'.format(num))
 	
 	
-	curr_header = f.tell()
-	curr_offset = f.tell() + num * struct.calcsize("<IIH")
 	
-	sid = 1
-	for data in msgs:
-		
-		length = len(data)
-		
-		# head
-		f.seek(curr_header)
-		write_struct(f, "<IIH", (sid,curr_offset,length))
+	with open(fname, 'wb') as f:
+		write_uint16(f, num)
+		if verbose:
+			print('write_messagesdat: count={}'.format(num))
+			
 		curr_header = f.tell()
+		curr_offset = f.tell() + num * struct.calcsize("<IIH")
 		
-		# body
-		f.seek(curr_offset)
-		write_fab(f, data.encode('ascii'))
-		curr_offset = f.tell()
-
+		sid = 1
+		for data in msgs:
+			
+			assert data[-1] == 0
+			
+			length = len(data)
+			
+			# head
+			f.seek(curr_header)
+			write_struct(f, "<IIH", (sid,curr_offset,length))
+			curr_header = f.tell()
+			
+			# body
+			f.seek(curr_offset)
+			write_fab(f, data)
+			curr_offset = f.tell()
+			
+			sid += 1
 		
-		sid += 1
-	
 	
 	output(fname)	
 		

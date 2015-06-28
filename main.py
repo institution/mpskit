@@ -1,7 +1,7 @@
 import sys
 from common import Error, External
 from hag import read_madsconcat,write_madsconcat
-from dat import read_messagesdat,write_messagesdat
+from dat import read_mdat, write_mdat
 from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
@@ -32,9 +32,9 @@ def call(fmt,cmd,path):
 		if fmt == 'dat':
 			
 			if cmd == 'unpack':
-				read_messagesdat(open(arg1, 'rb'), arg1)
+				read_mdat(open(arg1, 'rb'), arg1)
 			elif cmd == 'pack':
-				write_messagesdat(open(arg1, 'wb'), arg1)
+				write_mdat(open(arg1, 'wb'), arg1)
 			
 		elif fmt == 'hag':
 		

@@ -3,7 +3,7 @@ mpskit
 
 Microprose madspack file format decoder/encoder for Rex Nebular and other games.
 
-Version 0.9.1
+Version 0.9.4 BETA
 
 Installation
 ------------

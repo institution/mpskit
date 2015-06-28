@@ -103,12 +103,8 @@ def save_sprite(sprite_name, sprite):
 
 
 def write_ss(ss_name):
-	f = open(ss_name, 'wb')
 	
 	ss_header = load_ss_header(ss_name)
-	
-	
-	
 	
 	
 	# pallete
@@ -145,9 +141,8 @@ def write_ss(ss_name):
 	for part in parts:
 		part.seek(0)
 	
-	write_madspack(f, parts)
+	write_madspack(ss_name, parts)
 		
-	f.close()
 	print(ss_name)
 	
 	
@@ -157,52 +152,28 @@ def write_ss(ss_name):
 
 def save_sprite_header(sprite_name, h):
 	oname = sprite_name + '.json'
-	open(oname, 'w').write(
-		json.dumps([
-			('start_offset', h.start_offset),
-			('length', h.length),
-			('width_padded', h.width_padded),
-			('height_padded', h.height_padded),
-			('width', h.width),
-			('height', h.height),
-		])
-	)
+	with open(oname, 'w') as f:
+		json.dump(h.as_dict(), f, indent=2)
+	
 	print(oname)
 	
 
 
 def load_sprite_header(sprite_name):
-	kvs = json.loads(open(sprite_name + '.json', 'r').read())	
-	h = Header()
-	for k,v in kvs:
-		setattr(h, k, v)
-	return h
+	with open('{}.json'.format(sprite_name), 'r') as f:
+		return Header.from_dict(json.load(f))
 	
 
 		
 def load_ss_header(ss_name):
-	kvs = json.loads(open(ss_name + '.json', 'r').read())	
-	h = Header()
-	for k,v in kvs:
-		setattr(h, k, v)
-	return h
+	with open('{}.json'.format(ss_name), 'r') as f:
+		return Header.from_dict(json.load(f))
 	
 
 def save_ss_header(ss_name, h):
 	oname = ss_name + '.json'
-	open(oname, 'w').write(
-		json.dumps([
-			('mode', h.mode),
-			('unk1', h.unk1),
-			('type1', h.type1),
-			('type2', h.type2),
-			('unk2', h.unk2),
-			('nsprites', h.nsprites),
-			('unk3', h.unk3),
-			('data_size', h.data_size),
-			
-		])
-	)
+	with open(oname, 'w') as f:
+		json.dump(h.as_dict(), f, indent=2)	
 	print(oname)
 
 def read_ss_header(f):
@@ -211,10 +182,10 @@ def read_ss_header(f):
 	h.unk1 = read_uint8(f)
 	h.type1 = read_uint16(f)
 	h.type2 = read_uint16(f)
-	h.unk2 = read_bytes(f, 32)	
+	h.unk2 = decode_buffer(read_raw(f, 32))
 	assert f.tell() == 0x26
 	h.nsprites = read_uint16(f)  
-	h.unk3 = read_bytes(f, 108)	
+	h.unk3 = decode_buffer(read_raw(f, 108))
 	assert f.tell() == 0x94
 	h.data_size = read_uint32(f)   # size of last section (part) (unfabed)
 	assert f.tell() == 0x98
@@ -228,10 +199,10 @@ def write_ss_header(f, h):
 	write_uint8(f, h.unk1)
 	write_uint16(f, h.type1)
 	write_uint16(f, h.type2)
-	write_bytes(f, h.unk2)	
+	write_raw(f, 32, encode_buffer(h.unk2))
 	assert f.tell() == 0x26
 	write_uint16(f, h.nsprites) 
-	write_bytes(f, h.unk3)	
+	write_raw(f, 108, encode_buffer(h.unk3))
 	assert f.tell() == 0x94
 	write_uint32(f, h.data_size)   # size of last section (part) (unfabed)
 	assert f.tell() == 0x98

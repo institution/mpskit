@@ -143,7 +143,7 @@ def read_ff(ff_name):
 	# glyphs width in pixels
 	# glyph height is max_height
 	# null has width 0
-	h.char_widths = [0] + read_bytes(f, 127)
+	h.char_widths = [0] + [read_uint8(f) for _ in range(127)]
 	
 	
 	
