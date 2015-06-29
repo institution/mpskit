@@ -51,10 +51,8 @@ def read_ss(f, ss_name):
 	253 len col       produce len * [col] pixels, read command
 
 	"""
-	if not ss_name.endswith('.SS'):
-		error('ss decoder: invalid extension: {}', ss_name)
-	
-	
+	check_ext(ss_name, '.SS')
+		
 	verbose = 0
 	
 	
@@ -107,8 +105,7 @@ def save_sprite(sprite_name, sprite):
 
 
 def write_ss(ss_name):
-	if not ss_name.endswith('.SS'):
-		error('ss decoder: invalid extension: {}', ss_name)
+	check_ext(ss_name, '.SS')
 		
 	ss_header = load_ss_header(ss_name)
 	

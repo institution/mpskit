@@ -69,7 +69,9 @@ def write_raw(f, n, bs):
 		i += 1
 	return i
 
-
+def check_ext(name, ext):
+	if not name.upper().endswith(ext.upper()):
+		error('invalid extension: expected={}; file={};', ext, name)
 
 def read_raw(f, n):
 	return f.read(n)

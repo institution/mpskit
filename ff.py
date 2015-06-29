@@ -48,10 +48,10 @@ def save_ff_header(ff_name, h):
 	output(n)
 
 def write_ff(ff_name):
+	check_ext(ff_name, '.FF')
+	
 	h = load_ff_header(ff_name)
-	
-	
-	
+		
 	f = BytesIO()
 	f.seek(2 + 128 + 256)
 	
@@ -127,8 +127,7 @@ def write_ff_header(f, h):
 	
 	
 def read_ff(ff_name):
-	if not ff_name.endswith('.FF'):
-		error('ff decoder: invalid extension: {}', ff_name)
+	check_ext(ff_name, '.FF')
 	
 	parts = read_madspack(ff_name)
 	save_madspack(ff_name, parts)

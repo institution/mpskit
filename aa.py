@@ -19,8 +19,7 @@ Section 3: Misc
 verbose = 0
 
 def read_aa(aa_name):
-	if not aa_name.endswith('.AA'):
-		error('aa decoder: invalid extension: {}', aa_name)
+	check_ext(aa_name, '.AA')
 	
 	
 	parts = read_madspack(aa_name)
@@ -36,8 +35,8 @@ def read_aa(aa_name):
 
 
 def write_aa(aa_name):
-	if not aa_name.endswith('.AA'):
-		error('aa decoder: invalid extension: {}', aa_name)
+	check_ext(aa_name, '.AA')
+	
 	
 	
 	parts = load_madspack(aa_name)
