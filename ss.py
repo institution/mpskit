@@ -51,6 +51,10 @@ def read_ss(f, ss_name):
 	253 len col       produce len * [col] pixels, read command
 
 	"""
+	if not ss_name.endswith('.SS'):
+		error('ss decoder: invalid extension: {}', ss_name)
+	
+	
 	verbose = 0
 	
 	
@@ -103,7 +107,9 @@ def save_sprite(sprite_name, sprite):
 
 
 def write_ss(ss_name):
-	
+	if not ss_name.endswith('.SS'):
+		error('ss decoder: invalid extension: {}', ss_name)
+		
 	ss_header = load_ss_header(ss_name)
 	
 	
@@ -259,16 +265,18 @@ def read_pallete(f):
 	
 	ncolors = read_uint16(f)
 
-	pal = []
+	pal = [] #[None] * ncolors
 
-	for _ in range(ncolors):
+	for i in range(ncolors):
 		rr,gg,bb,ind,u2,flags = reads(f, '6b')
 		r,g,b = map(vga_color_trans, [rr,gg,bb])
 
 
 		# TODO: not the case in SECTION5/RM505A8.SS
-		assert ind == -1
+		if ind != -1:
+			warning("pallete index != -1 (ignored); ind={}", ind)
 		
+		#assert pal[i] is None
 		pal.append((r,g,b))
 		
 	assert len(pal) == ncolors

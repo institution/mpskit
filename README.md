@@ -3,7 +3,7 @@ mpskit
 
 Microprose madspack file format decoder/encoder for Rex Nebular and other games.
 
-Version 0.9.4 BETA
+Version 0.9.5 BETA
 
 Installation
 ------------
@@ -87,8 +87,13 @@ Now when you run REX the intro dialog will be changed!
 	mpskit ff pack FONTCONV.FF
 	mpskit hag pack ../GLOBAL.HAG
 	
+### Unpack all supported files ###
 
-
+	mpskit hag unpack *.HAG
+	mpskit ss unpack */*.SS
+	mpskit ff unpack */*.FF
+	mpskit aa unpack */*.AA
+	
 
 Limitations
 -----------

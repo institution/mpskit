@@ -19,7 +19,9 @@ Section 3: Misc
 verbose = 0
 
 def read_aa(aa_name):
-	assert aa_name.endswith('.AA')
+	if not aa_name.endswith('.AA'):
+		error('aa decoder: invalid extension: {}', aa_name)
+	
 	
 	parts = read_madspack(aa_name)
 	assert len(parts) >= 1
@@ -34,6 +36,10 @@ def read_aa(aa_name):
 
 
 def write_aa(aa_name):
+	if not aa_name.endswith('.AA'):
+		error('aa decoder: invalid extension: {}', aa_name)
+	
+	
 	parts = load_madspack(aa_name)
 	
 	if verbose:
@@ -143,7 +149,7 @@ def load_aa_messages(aa_name):
 
 
 def save_aa_header(aa_name, h):
-	n = aa_name+'.s00.json'
+	n = aa_name+'.json'
 	open(n, 'w').write(json.dumps(h.as_list(), indent=2))
 	output(n)
 		
@@ -172,7 +178,7 @@ def read_aa_header(aa_name):
 	h.scroll = read_uint32(f)
 	h.unk2 = decode_buffer(read_raw(f,6))
 	
-	h.background_file = decode_string(read_raw(f, 13), null_term=True)
+	h.background_file = decode_buffer(read_raw(f, 13))
 	
 	h.sprite_set_names = []
 	for i in range(50):
@@ -182,10 +188,10 @@ def read_aa_header(aa_name):
 				decode_string(name_raw, null_term=True)
 			)
 	
-	h.sound_name = decode_string(read_raw(f, 13), null_term=True)
-	h.unk_name = decode_string(read_raw(f, 13), null_term=True)
-	h.dsr_name = decode_string(read_raw(f, 13), null_term=True)
-	h.font_resource = decode_string(read_raw(f, 13), null_term=True)
+	h.sound_name = decode_buffer(read_raw(f, 13))
+	h.unk_name = decode_buffer(read_raw(f, 13))
+	h.dsr_name = decode_buffer(read_raw(f, 13))
+	h.font_resource = decode_buffer(read_raw(f, 13))
 
 	h.unk3 = read_uint8(f)
 

@@ -127,7 +127,8 @@ def write_ff_header(f, h):
 	
 	
 def read_ff(ff_name):
-	
+	if not ff_name.endswith('.FF'):
+		error('ff decoder: invalid extension: {}', ff_name)
 	
 	parts = read_madspack(ff_name)
 	save_madspack(ff_name, parts)

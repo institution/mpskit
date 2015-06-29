@@ -5,6 +5,9 @@ verbose = 0
 
 def read_madsconcat(f, fname):
 	
+	if not fname.endswith('.HAG'):
+		error('hag decoder: invalid extension: {}', fname)
+	
 	output_path = '{}.dir'.format(fname)
 	lst_name = '{}.lst'.format(fname)
 	
@@ -41,6 +44,9 @@ def read_madsconcat(f, fname):
 	
 
 def write_madsconcat(fname):
+	
+	if not fname.endswith('.HAG'):
+		error('hag decoder: invalid extension: {}', fname)
 	
 	f = open(fname, 'wb')
 	

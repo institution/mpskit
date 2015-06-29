@@ -63,7 +63,9 @@ def read_madspack(madspack_name):
 	f = open2(madspack_name, 'rb')
 	
 	magic = f.read(12).decode('ascii')
-	assert magic == 'MADSPACK 2.0', magic
+	if magic != 'MADSPACK 2.0':
+		error("invalid madspack header; expected=MADSPACK 2.0; got={}; file={}", magic, madspack_name)
+	#assert magic == 'MADSPACK 2.0', magic
 	
 	
 	
@@ -86,7 +88,8 @@ def read_madspack(madspack_name):
 			data = BytesIO(f.read(size))
 			
 		elif (flag & 1) == 1:
-			assert compressed_size != size
+			if compressed_size == size:
+				warning("madspack decoder: flag indicate fab compression but csize equals usize in: {}", madspack_name)
 			## fab compressed
 			data = read_fab(f, size)
 			

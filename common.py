@@ -139,6 +139,10 @@ def error(fmt, *args):
 	print('ERROR: ' + fmt.format(*args))
 	sys.exit(1)
 
+def warning(fmt, *args):
+	print('WARNING: ' + fmt.format(*args))
+	
+
 def write_string(f, n, s):
 	if len(s) > n:
 		error('string too long (must be < {}): {}', n, s)
@@ -163,8 +167,10 @@ def decode_string(b, null_term=False):
 	for byte in b:		
 		if null_term and byte == 0:
 			break
-		assert 0 <= byte < 128, type(byte)
+		assert (0 <= byte < 128)
+		#import ipdb; ipdb.set_trace()
 		xs.append(chr(byte))
+		
 	s = ''.join(xs)
 	s = s.replace("\x00", '|')
 	return s

@@ -16,9 +16,8 @@ def load_mdat_messages(mdat_name):
 
 
 def read_mdat(f, fname, verbose = 0):
-	
-	assert fname == 'MESSAGES.DAT'
-	
+	if fname != 'MESSAGES.DAT':
+		error('mdat decoder: only MESSAGES.DAT allowed')
 	
 	entries = []
 	
@@ -49,7 +48,8 @@ def read_mdat(f, fname, verbose = 0):
 
 
 def write_mdat(f, fname, verbose=0):
-	assert fname == 'MESSAGES.DAT'
+	if fname != 'MESSAGES.DAT':
+		error('mdat decoder: only MESSAGES.DAT allowed')
 	
 	messages = load_mdat_messages(fname)
 	
