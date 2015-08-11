@@ -11,10 +11,9 @@ Installation
 1) Install dependencies
 
 * On Debian run `sudo apt-get install python3-pil`
-* On Windows install Cygwin (http://cygwin.com/install.html) with following packages (select them during install): wget, python3, python3-pil, unzip, chere
+* On Windows install Cygwin (http://cygwin.com/install.html) with following packages (select them during install): wget, python3, python3-imaging, unzip, chere
 
 2) Open terminal (Cygwin terminal on Windows) and run following commands:
-
 
 ```bash
 
@@ -22,10 +21,10 @@ Installation
 wget https://github.com/institution/mpskit/archive/master.zip
 unzip master.zip
 cd mpskit-master
-chmod +x mpskit
 
-# install in system path (optional)
+# install in system path
 echo "python3 `pwd`/main.py \$*" > /usr/local/bin/mpskit
+chmod +x /usr/local/bin/mpskit
 
 # test - should display usage
 mpskit
