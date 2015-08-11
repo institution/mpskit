@@ -1,16 +1,22 @@
 mpskit
 ======
 
-Microprose madspack file format decoder/encoder for Rex Nebular and other games.
+Microprose madspack file format decoder/encoder for Rex Nebular and other games. Can run on Linux or Windows (using Cygwin).
 
-Version 0.9.7 BETA
+Version 0.9.8 BETA
 
 Installation
 ------------
 
+1) Install dependencies
+
+* On Debian run `sudo apt-get install python3-pil`
+* On Windows install Cygwin (http://cygwin.com/install.html) with following packages (select them during install): wget, python3, python3-pil, unzip, chere
+
+2) Open terminal (Cygwin terminal on Windows) and run following commands:
+
+
 ```bash
-# install dependencies
-sudo apt-get install python3-pil
 
 # download
 wget https://github.com/institution/mpskit/archive/master.zip
@@ -19,32 +25,35 @@ cd mpskit-master
 chmod +x mpskit
 
 # install in system path (optional)
-sudo ln -s `pwd`/mpskit /usr/local/bin/mpskit
+echo "python3 `pwd`/main.py \$*" > /usr/local/bin/mpskit
 
 # test - should display usage
 mpskit
+
+# optional Windows step: add "Open terminal here" option to Windows Explorer
+chere -i -t mintty
+
 ```
+
+
 
 Usage examples
 --------------
 
 ### General usage ###
-
-	# unpacking
+	
 	cd REX
-	mpskit hag unpack GLOBAL.HAG
-
-	cd GLOBAL.HAG.dir
-	mpskit dat unpack MESSAGES.DAT
-	mpskit ss unpack *.SS
+	
+	# unpacking
+	mpskit hag unpack GLOBAL.HAG	
+	mpskit dat unpack GLOBAL.HAG.dir/MESSAGES.DAT
+	mpskit ss unpack GLOBAL.HAG.dir/*.SS
 
 	# now you can modify generated txt and png files
 
 	# packing
-	mpskit ss pack GRD1_2.SS
-	mpskit dat pack MESSAGES.DAT
-	cd ..
-
+	mpskit ss pack GLOBAL.HAG.dir/GRD1_2.SS
+	mpskit dat pack GLOBAL.HAG.dir/MESSAGES.DAT	
 	mpskit hag pack GLOBAL.HAG
 	
 
@@ -53,7 +62,6 @@ Usage examples
 	# unpack
 	mpskit hag unpack SECTION9.HAG
 	mpskit aa unpack SECTION9.HAG.dir/RM951A.AA
-
 
 Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	
@@ -75,8 +83,7 @@ Now when you run REX the intro dialog will be changed!
 
 ### Adding new letter to font ###
 
-
-	cd GLOBAL.HAG.dir
+	cd GLOBAL.HAG.dir	
 	mpskit ff unpack FONTCONV.FF
 	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
 	
