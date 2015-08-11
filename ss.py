@@ -80,8 +80,14 @@ def read_ss(f, ss_name):
 		save_sprite_header(sprite_name, sprite_header)
 		
 	
+	if ss_header.pflag:
+		#print("PFLAG IS ON")
+		pal = read_pallete_col(parts[2])
+	else:
+		pal = read_pallete_rex(parts[2])
 	
-	pal = read_pallete(parts[2])
+	
+	
 	
 	sprites = []
 	for i, sprite_header in enumerate(sprite_headers):
@@ -113,7 +119,11 @@ def write_ss(ss_name):
 	# pallete
 	part2 = open('{}.s02.part'.format(ss_name), 'rb')
 	
-	pal = read_pallete(part2)
+	if ss_header.pflag:
+		#print("PFLAG IS ON")
+		pal = read_pallete_col(part2)
+	else:
+		pal = read_pallete_rex(part2)
 	
 	# reverse pallete
 	rpal = {}
@@ -185,7 +195,11 @@ def read_ss_header(f):
 	h.unk1 = read_uint8(f)
 	h.type1 = read_uint16(f)
 	h.type2 = read_uint16(f)
-	h.unk2 = decode_buffer(read_raw(f, 32))
+	
+	h.unk2a = decode_buffer(read_raw(f, 6))
+	h.pflag = read_uint8(f)
+	h.unk2b = decode_buffer(read_raw(f, 25))	
+	
 	assert f.tell() == 0x26
 	h.nsprites = read_uint16(f)  
 	h.unk3 = decode_buffer(read_raw(f, 108))
@@ -202,7 +216,9 @@ def write_ss_header(f, h):
 	write_uint8(f, h.unk1)
 	write_uint16(f, h.type1)
 	write_uint16(f, h.type2)
-	write_raw(f, 32, encode_buffer(h.unk2))
+	write_raw(f, 6, encode_buffer(h.unk2a))
+	write_uint8(f, h.pflag)
+	write_raw(f, 25, encode_buffer(h.unk2b))	
 	assert f.tell() == 0x26
 	write_uint16(f, h.nsprites) 
 	write_raw(f, 108, encode_buffer(h.unk3))
@@ -245,24 +261,44 @@ def read_sprite_header(f):
 def vga_color_trans(x):
 	return int((x * 255) / 63)
 
-def read_pallete(f):
+
+
+	
+
+def read_pallete_col(f):
+	""" Read pallete as encoded in Colonization	
+	repeat 256 
+		uint8 r
+		uint8 g
+		uint8 b	
 	"""
+	
+	pal = []
+
+	for i in range(256):
+		rr,gg,bb = reads(f, '3b')
+		r,g,b = map(vga_color_trans, [rr,gg,bb])		
+		pal.append((r,g,b))
 		
+	return pal
+	
+
+
+def read_pallete_rex(f):
+	"""	Read pallete as encoded in Rex	
 	uint16 ncolors
-	repeat ncolors {
+	repeat ncolors 
 		uint8 red6
 		uint8 green6
 		uint8 blue6
 		uint8 ind
 		uint8 u2
-		uint8 flags
-	}
-		
+		uint8 flags		
 	"""
 	
 	ncolors = read_uint16(f)
 
-	pal = [] #[None] * ncolors
+	pal = []
 
 	for i in range(ncolors):
 		rr,gg,bb,ind,u2,flags = reads(f, '6b')
@@ -279,6 +315,16 @@ def read_pallete(f):
 	assert len(pal) == ncolors
 		
 	return pal
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
 	
 
 def export_pallete(pal, trg):
