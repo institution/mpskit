@@ -2,6 +2,8 @@
 set -e
 set -x 
 echo 'RUNNING..'
+cp EXO.HAG EX.HAG
+
 mpskit hag unpack EX.HAG
 
 mpskit dat unpack EX.HAG.dir/MESSAGES.DAT
@@ -28,6 +30,9 @@ mpskit aa unpack EX.HAG.dir/I0.AA
 mpskit aa pack EX.HAG.dir/I0.AA
 mpskit aa unpack EX.HAG.dir/I0.AA
 
+mpskit cnv unpack EX.HAG.dir/CONV000.CNV
+mpskit cnv pack EX.HAG.dir/CONV000.CNV
+mpskit cnv unpack EX.HAG.dir/CONV000.CNV
 
 
 mpskit hag pack EX.HAG
@@ -35,6 +40,7 @@ mpskit hag unpack EX.HAG
 echo 'CLEANING..'
 rm EX.HAG.dir -r
 rm EX.HAG.lst
+rm EX.HAG
 echo 'OK'
 
 

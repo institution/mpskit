@@ -64,9 +64,10 @@ def read_madspack(madspack_name):
 	
 	magic = f.read(12).decode('ascii')
 	if magic != 'MADSPACK 2.0':
-		error("invalid madspack header; expected=MADSPACK 2.0; got={}; file={}", magic, madspack_name)
-	#assert magic == 'MADSPACK 2.0', magic
-	
+		raise InvalidMadspackVersion(
+			"invalid madspack version; expected=MADSPACK 2.0; got={}; file={}", magic, madspack_name
+		)
+		
 	
 	
 	

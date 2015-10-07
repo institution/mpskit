@@ -21,7 +21,6 @@ verbose = 0
 def read_aa(aa_name):
 	check_ext(aa_name, '.AA')
 	
-	
 	parts = read_madspack(aa_name)
 	assert len(parts) >= 1
 	save_madspack(aa_name, parts)
@@ -76,6 +75,7 @@ def write_aa_messages(f, ms):
 	
 
 def write_aa_message(f, m):
+	
 	i = 0
 	i += write_sint16(f, m.sound_id)
 	i += write_raw(f, 64, encode_string(m.msg, null_term=True, max_len= 64, fill=True))	

@@ -1,5 +1,5 @@
 import sys
-from common import Error, External
+from common import Error, External, warning, InvalidMadspackVersion
 from hag import read_madsconcat,write_madsconcat
 from dat import read_mdat, write_mdat
 from ss import read_ss, write_ss
@@ -7,6 +7,7 @@ from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
 from ff import read_ff, write_ff
+from cnv import read_cnv, write_cnv
 import os, sys
 import common
 
@@ -86,6 +87,18 @@ def call(fmt,cmd,path):
 				sys.exit(1)
 			
 		
+		elif fmt == 'cnv':
+			if cmd == 'unpack':			
+				read_cnv(arg1)
+				
+			elif cmd == 'pack':
+				write_cnv(arg1)
+							
+			else:
+				print(usage)
+				sys.exit(1)
+				
+				
 		elif fmt == 'ff':
 			if cmd == 'unpack':			
 				read_ff(arg1)
@@ -99,14 +112,18 @@ def call(fmt,cmd,path):
 			
 		else:
 			raise External('invalid format specification')
-			
+	
+	except InvalidMadspackVersion as e:
+		warning(*e.args)
+		
+	
 	finally:
 		os.chdir(odd)
 		common.g_curr_dir = ''
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
 '''
 
 

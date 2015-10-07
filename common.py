@@ -6,8 +6,21 @@ import _io, sys
 
 
 
-class Error(Exception): pass
+class Error(Exception): 
+	def __str__(self):
+		return format(*self.args)
+	
 class External(Error): pass
+class InvalidMadspackVersion(Error): pass
+
+
+
+
+
+
+
+
+
 
 g_curr_dir = ''
 
@@ -45,6 +58,19 @@ reads = read_struct
 
 def read(f, fmt):
 	return read_struct(f,fmt)[0]
+
+
+def read_until(f, b=0):	
+	xs = []
+	while 1:
+		x = read_uint8(f)
+		xs.append(x)
+		#import ipdb; ipdb.set_trace()
+		if x == b:
+			break
+			
+	return bytes(xs)
+	
 	
 def get_asciiz(buf):	
 	i = buf.find(b'\x00')

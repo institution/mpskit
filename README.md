@@ -70,6 +70,10 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	to this:
 	"msg": "\"Hello, Kitty!"      
 
+	pos_x can be changed to adjust text position on the screen
+    "pos_x": 159,
+
+
 Back to console
 
 	# pack again
@@ -99,6 +103,7 @@ Now when you run REX the intro dialog will be changed!
 	mpskit ss unpack */*.SS
 	mpskit ff unpack */*.FF
 	mpskit aa unpack */*.AA
+	mpskit cnv unpack */*.CNV
 	
 
 Limitations
