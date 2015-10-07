@@ -74,14 +74,15 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
     "pos_x": 159,
 
 
-Back to console
+### Modify CNV message ###
 
-	# pack again
-	mpskit aa pack SECTION9.HAG.dir/RM951A.AA
-	mpskit hag pack SECTION9.HAG
-
-
-Now when you run REX the intro dialog will be changed!
+	mpskit hag unpack GLOBAL.HAG
+	mpskit cnv unpack GLOBAL.HAG.dir/CONV000.CNV
+	
+	# now modify GLOBAL.HAG.dir/CONV000.CNV.msg.json
+	
+	mpskit cnv pack GLOBAL.HAG.dir/CONV000.CNV
+	mpskit hag pack GLOBAL.HAG
 
 
 ### Adding new letter to font ###
