@@ -6,9 +6,9 @@ cp EXO.HAG EX.HAG
 
 mpskit hag unpack EX.HAG
 
-mpskit dat unpack EX.HAG.dir/MESSAGES.DAT
-mpskit dat pack EX.HAG.dir/MESSAGES.DAT
-mpskit dat unpack EX.HAG.dir/MESSAGES.DAT
+mpskit mdat unpack EX.HAG.dir/MESSAGES.DAT
+mpskit mdat pack EX.HAG.dir/MESSAGES.DAT
+mpskit mdat unpack EX.HAG.dir/MESSAGES.DAT
 
 mpskit ss unpack EX.HAG.dir/RM901C1.SS
 mpskit ss pack EX.HAG.dir/RM901C1.SS
@@ -34,6 +34,9 @@ mpskit cnv unpack EX.HAG.dir/CONV000.CNV
 mpskit cnv pack EX.HAG.dir/CONV000.CNV
 mpskit cnv unpack EX.HAG.dir/CONV000.CNV
 
+mpskit rdat unpack EX.HAG.dir/VOCAB.DAT
+mpskit rdat pack EX.HAG.dir/VOCAB.DAT
+mpskit rdat unpack EX.HAG.dir/VOCAB.DAT
 
 mpskit hag pack EX.HAG
 mpskit hag unpack EX.HAG

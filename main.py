@@ -2,6 +2,7 @@ import sys
 from common import Error, External, warning, InvalidMadspackVersion
 from hag import read_madsconcat,write_madsconcat
 from dat import read_mdat, write_mdat
+from rdat import read_rdat, write_rdat
 from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
@@ -30,13 +31,19 @@ def call(fmt,cmd,path):
 			sys.exit(1)
 		
 		
-		if fmt == 'dat':
+		if fmt == 'mdat':
 			
 			if cmd == 'unpack':
 				read_mdat(open(arg1, 'rb'), arg1)
 			elif cmd == 'pack':
 				write_mdat(open(arg1, 'wb'), arg1)
-			
+		
+		elif fmt == 'rdat':
+			if cmd == 'unpack':
+				read_rdat(arg1)
+			elif cmd == 'pack':
+				write_rdat(arg1)
+							
 		elif fmt == 'hag':
 		
 			if cmd == 'unpack':
@@ -111,7 +118,10 @@ def call(fmt,cmd,path):
 				sys.exit(1)
 			
 		else:
+			
 			raise External('invalid format specification')
+			
+			
 	
 	except InvalidMadspackVersion as e:
 		warning(*e.args)
@@ -123,7 +133,7 @@ def call(fmt,cmd,path):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"dat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
 '''
 
 
