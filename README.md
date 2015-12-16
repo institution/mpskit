@@ -3,7 +3,7 @@ mpskit
 
 Microprose madspack file format decoder/encoder for Rex Nebular and other games. Can run on Linux or Windows (using Cygwin).
 
-Version 1.1.0
+Version 1.2.0
 
 Installation
 ------------
@@ -110,7 +110,7 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 Notes
 -----
 
-* While modifying unpacked png files use only colors already existing in the image
+* While modifying unpacked png files use only colors from corresponding palette (.pal.png file)
 * Use "mdat" for MESSAGES.DAT and "rdat" for other .DAT files
 
 License

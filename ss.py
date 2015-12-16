@@ -20,6 +20,8 @@ from fab import read_fab
 
 ext = 'png'
 
+FEATURE_RESIZE = 1
+
 def read_ss(f, ss_name):
 	
 	"""
@@ -95,11 +97,13 @@ def read_ss(f, ss_name):
 		
 	
 	if ss_header.pflag:
-		#print("PFLAG IS ON")
+		# print("PFLAG IS ON")
 		pal = read_pallete_col(parts[2])
 	else:
 		pal = read_pallete_rex(parts[2])
 	
+	export_pallete(pal, ss_name)
+
 	
 	
 	
@@ -247,8 +251,12 @@ def write_ss_header(f, h):
 def write_sprite_header(f, h):	
 	write_uint32(f, h.start_offset)
 	write_uint32(f, h.length)
+	
+	# probably margins; seems unused most of the time
 	write_uint16(f, h.width_padded)
 	write_uint16(f, h.height_padded)
+	
+	# image size
 	write_uint16(f, h.width)
 	write_uint16(f, h.height)
 	
@@ -263,7 +271,8 @@ def read_sprite_header(f):
 	h.height_padded = read_uint16(f)
 	h.width = read_uint16(f)
 	h.height = read_uint16(f)
-
+	
+	
 	if verbose:
 		print('padded=', (h.width_padded, h.height_padded))
 		print('normal=', (h.width, h.height))
@@ -341,18 +350,23 @@ def read_pallete_rex(f):
 	
 	
 
-def export_pallete(pal, trg):
+def export_pallete(pal, name_ss):
 	img = Image.new('P', (16,16), 0)
-	img.putpalette(reduce(operator.add, pal))
+	
+	ccpal = ()
+	for c in pal:
+		ccpal = ccpal + c		
+	
+	img.putpalette(ccpal)
 	
 	d = ImageDraw.ImageDraw(img)
-	d.setfill(1)
 	for j in range(16):
 		for i in range(16):
-			d.setink(j*16 + i)			
-			d.rectangle((i, j, i+1, j+1))
+			d.rectangle((i, j, i+1, j+1), fill=(j*16 + i))
 		
-	img.save('{}/pal.{}'.format(dname, ext))
+	name_pal = '{}.pal.png'.format(name_ss)
+	img.save(name_pal)
+	print(name_pal)
 
 
 
@@ -403,11 +417,16 @@ def write_sprite(head, data, header, img, rpal):
 			return rpal[col]
 	
 	
-	# 1x1 image is used instead of 0x0 image because 0x0 image cannot be represented as png
-	if img.size[0] > 1:
-		assert header.width == img.size[0]	
-	if img.size[1] > 1:
-		assert header.height == img.size[1]
+	# 1x1 image is used instead of 0x0 image because 0x0 image cannot be represented as png	
+	if img.size[0] > 1 and img.size[1] > 1:
+		header.width = img.size[0]
+		header.height = img.size[1]
+	
+	#	if img.size[0] > 1:
+	#		assert header.width == img.size[0]	
+	#	if img.size[1] > 1:
+	#		assert header.height == img.size[1]
+	
 	
 	# data
 	start = data.tell()
