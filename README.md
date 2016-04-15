@@ -3,7 +3,7 @@ mpskit
 
 Microprose madspack file format decoder/encoder for Rex Nebular and other games. Can run on Linux or Windows (using Cygwin).
 
-Version 1.2.0
+Version 1.2.1
 
 Installation
 ------------
@@ -105,6 +105,7 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit ff unpack */*.FF
 	mpskit aa unpack */*.AA
 	mpskit cnv unpack */*.CNV
+	mpskit cnv unpack */*.PIK
 	
 
 Notes
