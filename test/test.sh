@@ -38,6 +38,10 @@ mpskit rdat unpack EX.HAG.dir/VOCAB.DAT
 mpskit rdat pack EX.HAG.dir/VOCAB.DAT
 mpskit rdat unpack EX.HAG.dir/VOCAB.DAT
 
+mpskit pik unpack EX.HAG.dir/EUROPE.PIK
+#mpskit pik pack EX.HAG.dir/EUROPE.PIK
+#mpskit pik unpack EX.HAG.dir/EUROPE.PIK
+
 mpskit hag pack EX.HAG
 mpskit hag unpack EX.HAG
 echo 'CLEANING..'

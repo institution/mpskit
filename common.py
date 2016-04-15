@@ -33,6 +33,10 @@ class InvalidMadspackVersion(Error): pass
 
 
 
+def save_image(name, img):
+	oname = name+'.png'
+	img.save(oname)
+	print(oname)
 
 
 

@@ -23,6 +23,7 @@ from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
 from ff import read_ff, write_ff
 from cnv import read_cnv, write_cnv
+from pik import read_pik
 import os, sys
 import common
 
@@ -51,12 +52,18 @@ def call(fmt,cmd,path):
 				read_mdat(open(arg1, 'rb'), arg1)
 			elif cmd == 'pack':
 				write_mdat(open(arg1, 'wb'), arg1)
+			else:
+				print(usage)
+				sys.exit(1)
 		
 		elif fmt == 'rdat':
 			if cmd == 'unpack':
 				read_rdat(arg1)
 			elif cmd == 'pack':
 				write_rdat(arg1)
+			else:
+				print(usage)
+				sys.exit(1)
 							
 		elif fmt == 'hag':
 		
@@ -64,7 +71,9 @@ def call(fmt,cmd,path):
 				read_madsconcat(open(arg1, 'rb'), arg1)
 			elif cmd == 'pack':
 				write_madsconcat(arg1)
-		
+			else:
+				print(usage)
+				sys.exit(1)
 		
 		elif fmt == 'ss':
 			if cmd == 'unpack':
@@ -130,7 +139,18 @@ def call(fmt,cmd,path):
 			else:
 				print(usage)
 				sys.exit(1)
-			
+		
+		elif fmt == 'pik':
+			if cmd == 'unpack':			
+				read_pik(arg1)
+				
+			elif cmd == 'pack':
+				print("pik packing not implemented because nobody requested it")
+							
+			else:
+				print(usage)
+				sys.exit(1)	
+				
 		else:
 			
 			raise External('invalid format specification')
@@ -147,7 +167,7 @@ def call(fmt,cmd,path):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"> <"unpack"|"pack"> <file-name> [file-name ...] 
 '''
 
 
