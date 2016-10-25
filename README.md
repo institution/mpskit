@@ -8,8 +8,9 @@ Version 1.3.0
 Release Notes
 -------------
 
+```
 1.3.0 - MESSAGES.DAT is now unpacked/packed into/from 2 files: MESSAGES.DAT.msg.json and MESSAGES.DAT.id.json. If you have modified MESSAGES.DAT.msg.json you need to pair it with MESSAGES.DAT.id.json extracted from unmodified MESSAGES.DAT
-
+```
 
 Installation
 ------------
