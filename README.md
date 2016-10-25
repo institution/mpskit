@@ -3,7 +3,13 @@ mpskit
 
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin).
 
-Version 1.2.1
+Version 1.3.0
+
+Release Notes
+-------------
+
+1.3.0 - MESSAGES.DAT is now unpacked/packed into/from 2 files: MESSAGES.DAT.msg.json and MESSAGES.DAT.id.json. If you have modified MESSAGES.DAT.msg.json you need to pair it with MESSAGES.DAT.id.json extracted from unmodified MESSAGES.DAT
+
 
 Installation
 ------------
@@ -105,7 +111,7 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit ff unpack */*.FF
 	mpskit aa unpack */*.AA
 	mpskit cnv unpack */*.CNV
-	mpskit cnv unpack */*.PIK
+	mpskit pik unpack */*.PIK
 	
 
 Notes

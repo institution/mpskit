@@ -22,11 +22,20 @@ def save_mdat_messages(mdat_name, h):
 	with open(oname, 'w') as f:
 		json.dump(h, f, indent=2)
 	output(oname)
+	
+def save_mdat_metainfo(mdat_name, h):
+	oname = "{}.id.json".format(mdat_name)
+	with open(oname, 'w') as f:
+		json.dump(h, f, indent=2)
+	output(oname)
 
 def load_mdat_messages(mdat_name):
 	with open("{}.msg.json".format(mdat_name), 'r') as f:
 		return json.load(f)
-	
+
+def load_mdat_metainfo(mdat_name):
+	with open("{}.id.json".format(mdat_name), 'r') as f:
+		return json.load(f)
 
 
 def read_mdat(f, fname, verbose = 0):
@@ -34,12 +43,13 @@ def read_mdat(f, fname, verbose = 0):
 		warning('mdat decoder: only MESSAGES.DAT allowed')
 	
 	entries = []
+	metas = []
 	
 	# number of entries
 	num = read_uint16(f)
 	
 	if verbose:
-		print('read_messagesdat: num={}'.format(num))
+		print('mdat: count={}'.format(num))
 	
 	curr_header = f.tell()
 		
@@ -52,43 +62,59 @@ def read_mdat(f, fname, verbose = 0):
 		# entry content
 		f.seek(offset)
 		
-		dest = read_fab(f, length)
+		
+		dest = read_fab(f, length, verbose = 0)
+		
+		clength = f.tell() - offset
+		if verbose:
+			print("sid = {}; length = {}; clength = {};".format(sid, length, clength))
+			
+		
 		
 		entry = decode_string(dest.read())
 		entries.append(entry)
+		
+		metas.append({"id": sid})
 	
 	
 	save_mdat_messages(fname, entries)
+	save_mdat_metainfo(fname, metas)
 
 
-def write_mdat(f, fname, verbose=0):
+def write_mdat(f, fname, verbose = 0):
 	if fname != 'MESSAGES.DAT':
 		warning('mdat decoder: only MESSAGES.DAT allowed')
 	
 	messages = load_mdat_messages(fname)
-	
-	
+	metas = load_mdat_metainfo(fname)
 	
 	#
 	msgs = [encode_string(s, null_term=True) for s in messages]
 	num = len(msgs)
 	
 	
-	
 	with open(fname, 'wb') as f:
 		write_uint16(f, num)
 		if verbose:
-			print('write_messagesdat: count={}'.format(num))
+			print('mdat: count={}'.format(num))
 			
 		curr_header = f.tell()
 		curr_offset = f.tell() + num * struct.calcsize("<IIH")
 		
-		sid = 1
-		for data in msgs:
+		#sid = 1
+		for meta,data in zip(metas, msgs):
 			
 			assert data[-1] == 0
 			
+			
+			
 			length = len(data)
+			
+			#if verbose:
+			#	print("sid = {}; offset = {}; msg = {};".format(sid, curr_offset, data))
+			
+			
+			sid = meta['id']
 			
 			# head
 			f.seek(curr_header)
@@ -98,9 +124,13 @@ def write_mdat(f, fname, verbose=0):
 			# body
 			f.seek(curr_offset)
 			write_fab(f, data)
+			clength = f.tell() - curr_offset
 			curr_offset = f.tell()
 			
-			sid += 1
+			if verbose:
+				print("sid = {}; length = {}; clength = {};".format(sid, length, clength))
+			
+			#sid += 1
 		
 	
 	output(fname)	
@@ -119,8 +149,6 @@ return struct.pack("<3sBH15sH1cBBB",
 		0x00,
 	)
 '''
-
-	
 
 
 
