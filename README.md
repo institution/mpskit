@@ -3,10 +3,12 @@ mpskit
 
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin).
 
-Version 1.3.0
+Version 1.4.0
 
 Release Notes
 -------------
+
+**1.4.0** - Rex Nebular ART format support added; All png files are now written in indexed mode (see Notes below)
 
 **1.3.0** - MESSAGES.DAT is now unpacked/packed into/from 2 files: MESSAGES.DAT.msg.json and MESSAGES.DAT.id.json. 
 If you have modified MESSAGES.DAT.msg.json you will need to pair it up with MESSAGES.DAT.id.json extracted from unmodified MESSAGES.DAT
@@ -25,8 +27,8 @@ Installation
 ```bash
 
 # download
-wget https://github.com/institution/mpskit/archive/master.zip
-unzip master.zip
+wget -O mpskit.zip https://github.com/institution/mpskit/archive/master.zip
+unzip -o master.zip
 cd mpskit-master
 
 # install in system path
@@ -40,7 +42,6 @@ mpskit
 chere -i -t mintty
 
 ```
-
 
 
 Usage examples
@@ -112,14 +113,35 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit ff unpack */*.FF
 	mpskit aa unpack */*.AA
 	mpskit cnv unpack */*.CNV
+	mpskit art unpack */*.ART
 	mpskit pik unpack */*.PIK
-	
+
+
+Supported File Formats
+----------------------
+
+|command  |applied to                            |content             |
+|---------|--------------------------------------|--------------------|
+|hag      |HAG files                             |collection of files |
+|mdat     |MESSAGES.DAT file                     |text                |
+|rdat     |DAT files containing text             |text                |
+|ss       |SS files                              |sprites             |
+|aa       |AA files                              |text                |
+|cnv      |CNV files                             |text                |
+|art      |ART files                             |background image    |
+|ff       |FF files                              |glyphs              |
+|pik      |PIK files                             |background image    |
+|fab      |file containing FAB section           |                    |
+|madspack |any file which begins with "MADSPACK" |                    |
+
+
 
 Notes
 -----
 
-* While modifying unpacked png files use only colors from corresponding palette (.pal.png file)
-* Use "mdat" for MESSAGES.DAT and "rdat" for other .DAT files
+* png files are written in indexed mode with embeded palette ("Colormap" dialog in GIMP)
+* changes to embeded palette are ignored by mpskit
+* use "mdat" for MESSAGES.DAT and "rdat" for other .DAT files
 
 License
 -------
@@ -140,7 +162,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Contact
 -------
-Institution, sta256+mpskit at gmail.com
+sta256+mpskit@gmail.com
 
 Thanks to
 ---------

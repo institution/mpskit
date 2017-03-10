@@ -18,7 +18,7 @@ from collections import namedtuple
 from PIL import Image, ImageDraw
 from PIL.ImagePalette import ImagePalette
 from fab import read_fab
-from pallete import read_pallete_col, read_pallete_rex
+from pallete import read_pallete_col, read_pallete_rex, attach_palette, export_pallete
 
 ext = 'png'
 
@@ -35,42 +35,6 @@ def save_header(name, h):
 
 	
 	
-
-def attach_palette(img, pal):
-	R,G,B = [],[],[]
-	for c in pal:
-		R.append(c[0])
-		G.append(c[1])
-		B.append(c[2])
-
-	img.putpalette(
-		ImagePalette(
-			mode = 'RGB', 
-			palette = R + G + B, 		
-			size = len(pal) * 3,
-		)
-	)
-	
-
-def export_pallete(pal, name_ss):
-
-	img = Image.new('P', (16,16), 0)
-
-	attach_palette(img, pal)
-	
-	d = ImageDraw.ImageDraw(img)
-	d.rectangle((0, 0, 16, 16), fill=0)
-	for k in range(len(pal)):
-		i = k % 16
-		j = k // 16
-		d.rectangle((i, j, i+1, j+1), fill=k)
-		
-	name_pal = '{}.pal.png'.format(name_ss)
-	img.save(name_pal)
-	print(name_pal)
-
-
-
 	
 
 

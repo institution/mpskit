@@ -13,10 +13,51 @@
     See LICENSE file for more details.
 """
 from common import *
+from PIL import Image, ImageDraw
+from PIL.ImagePalette import ImagePalette
 
 
 def vga_color_trans(x):
 	return int((x * 255) / 63)
+
+
+
+def attach_palette(img, pal):
+	R,G,B = [],[],[]
+	for c in pal:
+		R.append(c[0])
+		G.append(c[1])
+		B.append(c[2])
+
+	img.putpalette(
+		ImagePalette(
+			mode = 'RGB', 
+			palette = R + G + B, 		
+			size = len(pal) * 3,
+		)
+	)
+	
+	
+
+
+def export_pallete(pal, name_ss):
+
+	img = Image.new('P', (16,16), 0)
+
+	attach_palette(img, pal)
+	
+	d = ImageDraw.ImageDraw(img)
+	d.rectangle((0, 0, 16, 16), fill=0)
+	for k in range(len(pal)):
+		i = k % 16
+		j = k // 16
+		d.rectangle((i, j, i+1, j+1), fill=k)
+		
+	name_pal = '{}.pal.png'.format(name_ss)
+	img.save(name_pal)
+	print(name_pal)
+
+
 
 
 def read_pallete_col(f):
