@@ -42,6 +42,11 @@ mpskit pik unpack EX.HAG.dir/EUROPE.PIK
 #mpskit pik pack EX.HAG.dir/EUROPE.PIK
 #mpskit pik unpack EX.HAG.dir/EUROPE.PIK
 
+mpskit art unpack EX.HAG.dir/RM101.ART
+mpskit art pack EX.HAG.dir/RM101.ART
+mpskit art unpack EX.HAG.dir/RM101.ART
+
+
 mpskit hag pack EX.HAG
 mpskit hag unpack EX.HAG
 echo 'CLEANING..'

@@ -105,6 +105,7 @@ def read_raw(f, n):
 	#return read_struct(f, '<B')[0]
 
 
+
 def write_raw(f, n, bs):
 	assert len(bs) == n
 	i = 0
@@ -124,14 +125,6 @@ def read_raw(f, n):
 	#return read_struct(f, '<B')[0]
 
 
-def write_raw(f, n, bs):
-	assert len(bs) == n
-	i = 0
-	for b in bs:
-		assert 0 <= b < 256
-		write_uint8(f, b)
-		i += 1
-	return i
 
 def decode_buffer(xs):
 	return xs.decode('latin1')

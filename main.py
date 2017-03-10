@@ -24,6 +24,7 @@ from aa import read_aa, write_aa
 from ff import read_ff, write_ff
 from cnv import read_cnv, write_cnv
 from pik import read_pik
+from art import read_art, write_art
 import os, sys
 import common
 
@@ -146,6 +147,18 @@ def call(fmt,cmd,path):
 				
 			elif cmd == 'pack':
 				print("pik packing not implemented because nobody requested it")
+							
+			else:
+				print(usage)
+				sys.exit(1)	
+		
+		elif fmt == 'art':
+			if cmd == 'unpack':			
+				read_art(arg1)
+				
+			elif cmd == 'pack':
+				write_art(arg1)
+				
 							
 			else:
 				print(usage)

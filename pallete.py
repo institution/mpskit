@@ -56,8 +56,9 @@ def read_pallete_rex(f):
 	for i in range(ncolors):
 		rr,gg,bb,ind,u2,flags = reads(f, '6b')
 		r,g,b = map(vga_color_trans, [rr,gg,bb])
-
-
+		
+		#print("pal",rr,gg,bb,ind,u2,flags)
+		
 		# TODO: not the case in SECTION5/RM505A8.SS
 		if ind != -1:
 			warning("pallete index != -1 (ignored); ind={}", ind)
