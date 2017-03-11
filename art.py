@@ -1,4 +1,4 @@
-""" Copyright 2015  Institution, sta256+mpskit at gmail.com
+""" Copyright 2015-2017  sta256+mpskit at gmail.com
     
     This file is part of mpskit.
 
@@ -34,14 +34,6 @@ def save_header(name, h):
 
 
 	
-	
-	
-
-
-
-
-
-
 
 def read_art(art_name):
 	check_ext(art_name, '.ART')

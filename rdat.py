@@ -1,4 +1,4 @@
-""" Copyright 2015  Institution, sta256+mpskit at gmail.com
+""" Copyright 2015-2017  sta256+mpskit at gmail.com
     
     This file is part of mpskit.
 
@@ -12,6 +12,7 @@
 
     See LICENSE file for more details.
 """
+
 from common import *
 """
 Raw DAT: null-terminated strings, no compression, no madspack
