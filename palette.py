@@ -37,10 +37,11 @@ def attach_palette(img, pal):
 		)
 	)
 	
-	
 
 
-def export_pallete(pal, name_ss):
+
+
+def export_palette(pal, name_ss):
 
 	img = Image.new('P', (16,16), 0)
 
@@ -60,8 +61,8 @@ def export_pallete(pal, name_ss):
 
 
 
-def read_pallete_col(f):
-	""" Read pallete as encoded in Colonization	
+def read_palette_col(f):
+	""" Read palette as encoded in Colonization	
 	repeat 256 
 		uint8 r
 		uint8 g
@@ -78,8 +79,8 @@ def read_pallete_col(f):
 	return pal
 
 
-def read_pallete_rex(f):
-	"""	Read pallete as encoded in Rex	
+def read_palette_rex(f):
+	"""	Read palette as encoded in Rex	
 	uint16 ncolors
 	repeat ncolors 
 		uint8 red6
@@ -102,7 +103,7 @@ def read_pallete_rex(f):
 		
 		# TODO: not the case in SECTION5/RM505A8.SS
 		if ind != -1:
-			warning("pallete index != -1 (ignored); ind={}", ind)
+			warning("palette index != -1 (ignored); ind={}", ind)
 		
 		#assert pal[i] is None
 		pal.append((r,g,b))

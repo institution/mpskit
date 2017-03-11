@@ -15,6 +15,7 @@
 from common import *
 from madspack import read_madspack, save_madspack, write_madspack
 from PIL import Image
+from palette import attach_palette
 """
 FF file format
 
@@ -108,7 +109,7 @@ def write_glyph(f, ff_name, h, n):
 				byte = 0b00000000
 				
 				for shift in (6,4,2,0):
-					ind = get_col_index(img.getpixel((x,y)))
+					ind = img.getpixel((x,y))
 					byte = byte | (ind << shift)
 					
 					x += 1
@@ -185,7 +186,8 @@ def read_ff(ff_name):
 		if width == 0:
 			continue
 		
-		img = Image.new("RGBA", (width,height))
+		img = Image.new("P", (width,height))
+		attach_palette(img, pal)
 		
 		y = 0
 		while y < height:
@@ -193,25 +195,25 @@ def read_ff(ff_name):
 			while 1:				
 				byte = read_uint8(f)
 				
-				col = pal[(byte & 0b11000000) >> 6]
+				col = (byte & 0b11000000) >> 6
 				img.putpixel((x,y), col)
 				x += 1
 				if x == width:
 					break
 				
-				col = pal[(byte & 0b00110000) >> 4]
+				col = (byte & 0b00110000) >> 4
 				img.putpixel((x,y), col)
 				x += 1
 				if x == width:
 					break
 				
-				col = pal[(byte & 0b00001100) >> 2]
+				col = (byte & 0b00001100) >> 2
 				img.putpixel((x,y), col)
 				x += 1
 				if x == width:
 					break
 				
-				col = pal[(byte & 0b00000011) >> 0]
+				col = (byte & 0b00000011) >> 0
 				img.putpixel((x,y), col)
 				x += 1
 				if x == width:

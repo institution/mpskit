@@ -17,9 +17,11 @@ from madspack import read_madspack, write_madspack, save_madspack
 from collections import namedtuple
 from PIL import Image, ImageDraw
 from fab import read_fab
-from pallete import read_pallete_col, read_pallete_rex
+from palette import read_palette_col, read_palette_rex, attach_palette, export_palette
 
 ext = 'png'
+
+transparency_index = 0xFD
 
 FEATURE_RESIZE = 1
 
@@ -99,11 +101,11 @@ def read_ss(f, ss_name):
 	
 	if ss_header.pflag:
 		# print("PFLAG IS ON")
-		pal = read_pallete_col(parts[2])
+		pal = read_palette_col(parts[2])
 	else:
-		pal = read_pallete_rex(parts[2])
+		pal = read_palette_rex(parts[2])
 	
-	export_pallete(pal, ss_name)
+	export_palette(pal, ss_name)
 
 	
 	
@@ -115,17 +117,13 @@ def read_ss(f, ss_name):
 		
 		# save sprite
 		sprite_name = '{}.{:03}'.format(ss_name, i)
-		save_sprite(sprite_name, sprite)
+		
+		save_image(sprite_name, sprite, transparency=transparency_index)
 	
 	return sprites
 
 
 	
-def save_sprite(sprite_name, sprite):
-	oname = sprite_name+'.png'
-	sprite.save(oname)
-	print(oname)
-
 
 
 
@@ -135,16 +133,16 @@ def write_ss(ss_name):
 	ss_header = load_ss_header(ss_name)
 	
 	
-	# pallete
+	# palette
 	part2 = open('{}.s02.part'.format(ss_name), 'rb')
 	
 	if ss_header.pflag:
 		#print("PFLAG IS ON")
-		pal = read_pallete_col(part2)
+		pal = read_palette_col(part2)
 	else:
-		pal = read_pallete_rex(part2)
+		pal = read_palette_rex(part2)
 	
-	# reverse pallete
+	# reverse palpalettelete
 	rpal = {}
 	for i,col in enumerate(pal):
 		rpal[col] = i
@@ -291,28 +289,6 @@ def read_sprite_header(f):
 	
 	
 	
-	
-	
-
-def export_pallete(pal, name_ss):
-	img = Image.new('P', (16,16), 0)
-	
-	ccpal = ()
-	for c in pal:
-		ccpal = ccpal + c		
-	
-	img.putpalette(ccpal)
-	
-	d = ImageDraw.ImageDraw(img)
-	for j in range(16):
-		for i in range(16):
-			d.rectangle((i, j, i+1, j+1), fill=(j*16 + i))
-		
-	name_pal = '{}.pal.png'.format(name_ss)
-	img.save(name_pal)
-	print(name_pal)
-
-
 
 
 
@@ -323,7 +299,7 @@ def write_sprite(head, data, header, img, rpal):
 	data -- data part
 	header -- original header
 	img -- image
-	rpal -- reversed pallete	
+	rpal -- reversed palette	
 	return -- size writen to data
 	
 	
@@ -352,14 +328,18 @@ def write_sprite(head, data, header, img, rpal):
 	"""
 
 	def get_index(x,y):
-		pix = img.getpixel((x,y))
-		if pix == (0,0,0,0):
-			# transparent background
-			return 0xFD
+		if img.mode == 'P':
+			return img.getpixel((x,y))
 		else:
-			col = pix[:3]
-			return rpal[col]
-	
+			# backwards compability RGBA
+			pix = img.getpixel((x,y))
+			if pix == (0,0,0,0):
+				# transparent background
+				return 0xFD
+			else:
+				col = pix[:3]
+				return rpal[col]
+		
 	
 	# 1x1 image is used instead of 0x0 image because 0x0 image cannot be represented as png	
 	if img.size[0] > 1 and img.size[1] > 1:
@@ -435,14 +415,17 @@ def read_sprite(ti, rdata, pal, mode, verbose=0):
 	# special case
 	if ti.width == 0 or ti.height == 0:
 		if data[0] == 252:		
-			img = Image.new("RGBA", (1,1))
-			img.putpixel((0,0), (0,0,0,0))
+			img = Image.new("P", (1,1))
+			attach_palette(img, [(0,0,0)])			
+			img.putpixel((0,0), 0)
 			return img
 		else:
 			raise Error('invalid encoding of 0x0 image while reading SS file')
 			
 
-	img = Image.new('RGBA', (ti.width, ti.height), 'black')
+	img = Image.new('P', (ti.width, ti.height))
+	attach_palette(img, pal)
+	
 	pix = img.load()
 	
 	if verbose:
@@ -454,11 +437,9 @@ def read_sprite(ti, rdata, pal, mode, verbose=0):
 	
 	def write_ind(ci, l=1):
 		if ci == bg:
-			
-			c = (0,0,0,0)
-			#c = pal[ci] + (0,)
+			c = bg # 0?
 		else:
-			c = pal[ci] + (255,)
+			c = ci
 			
 		nonlocal i
 		while l > 0:

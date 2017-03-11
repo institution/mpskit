@@ -18,7 +18,7 @@ from collections import namedtuple
 from PIL import Image, ImageDraw
 from PIL.ImagePalette import ImagePalette
 from fab import read_fab
-from pallete import read_pallete_col, read_pallete_rex, attach_palette, export_pallete
+from palette import read_palette_col, read_palette_rex, attach_palette, export_palette
 
 ext = 'png'
 
@@ -53,7 +53,7 @@ def read_art(art_name):
 	
 	save_madspack(art_name, parts)
 		
-	# parts[0] -- dimensions + pallete
+	# parts[0] -- dimensions + palette
 	# parts[1] -- image data
 		
 		
@@ -64,10 +64,10 @@ def read_art(art_name):
 	
 	save_header(art_name, h)
 	
-	# pallete
-	pal = read_pallete_rex(parts[0])
+	# palette
+	pal = read_palette_rex(parts[0])
 	
-	export_pallete(pal, art_name)
+	export_palette(pal, art_name)
 	
 	
 	
@@ -93,7 +93,7 @@ def write_art(art_name):
 			
 	verbose = 0	
 	
-	# parts[0] -- dimensions + pallete
+	# parts[0] -- dimensions + palette
 	# parts[1] -- image data
 		
 		

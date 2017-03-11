@@ -15,7 +15,7 @@
 from common import *
 from madspack import read_madspack, write_madspack, save_madspack
 from PIL import Image
-from pallete import read_pallete_col
+from palette import read_palette_col, attach_palette
 
 """
 PIK (Colonization)
@@ -33,7 +33,7 @@ def read_pik(pik_name):
 	save_madspack(pik_name, parts)
 	
 	h = read_pik_header(parts[0])	
-	pal = read_pallete_col(parts[2])
+	pal = read_palette_col(parts[2])
 	img = read_pik_image(parts[1], h, pal)
 		
 	save_image(pik_name, img)
@@ -50,12 +50,13 @@ def read_pik_header(f):
 
 def read_pik_image(part, h, pal):
 	
-	img = Image.new('RGB', (h.width, h.height), 'black')
+	img = Image.new('P', (h.width, h.height))
+	attach_palette(img, pal)
 	pix = img.load()	
 	 
 	for j in range(h.height):
 		for i in range(h.width):
-			pix[i,j] = pal[read_uint8(part)]
+			pix[i,j] = read_uint8(part)
 
 	return img
 
