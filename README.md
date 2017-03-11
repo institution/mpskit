@@ -44,25 +44,6 @@ chere -i -t mintty
 ```
 
 
-Supported File Formats
-----------------------
-
-|command  |applied to                            |content             |
-|---------|--------------------------------------|--------------------|
-|hag      |HAG files                             |collection of files |
-|mdat     |MESSAGES.DAT file                     |text                |
-|rdat     |DAT files containing text             |text                |
-|ss       |SS files                              |sprites             |
-|aa       |AA files                              |text                |
-|cnv      |CNV files                             |text                |
-|art      |ART files                             |background image    |
-|ff       |FF files                              |glyphs              |
-|pik      |PIK files                             |background image    |
-|fab      |file containing FAB section           |                    |
-|madspack |any file which begins with "MADSPACK" |                    |
-
-
-
 Usage examples
 --------------
 
@@ -134,6 +115,24 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit cnv unpack */*.CNV
 	mpskit art unpack */*.ART
 	mpskit pik unpack */*.PIK
+
+
+Supported File Formats
+----------------------
+
+|command  |applied to                            |content             |
+|---------|--------------------------------------|--------------------|
+|hag      |HAG files                             |collection of files |
+|mdat     |MESSAGES.DAT file                     |text                |
+|rdat     |DAT files containing text             |text                |
+|ss       |SS files                              |sprites             |
+|aa       |AA files                              |text                |
+|cnv      |CNV files                             |text                |
+|art      |ART files                             |background image    |
+|ff       |FF files                              |glyphs              |
+|pik      |PIK files                             |background image    |
+|fab      |file containing FAB section           |                    |
+|madspack |any file which begins with "MADSPACK" |                    |
 
 
 Notes
