@@ -28,7 +28,7 @@ Installation
 
 # download
 wget -O mpskit.zip https://github.com/institution/mpskit/archive/master.zip
-unzip -o master.zip
+unzip -o mpskit.zip
 cd mpskit-master
 
 # install in system path
