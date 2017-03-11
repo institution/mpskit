@@ -180,7 +180,7 @@ def call(fmt,cmd,path):
 		
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"> <"unpack"|"pack"> <file-name> [file-name ...] 
 '''
 
 
