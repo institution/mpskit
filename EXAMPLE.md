@@ -6,10 +6,12 @@
 	mpskit ff unpack FONTMAIN.FF
 	cp FONTMAIN.FF.078.png FONTMAIN.FF.001.png
 
-	# FONTMAIN.FF.001.png is this is your new letter
+	# FONTMAIN.FF.001.png is your new letter
 	# it will be attached to charcode 1
 	# you can paint it now
-
+	# changing width is allowed but keep height the same
+	# color palette can be accessed in Gimp with "Colormap" dialog
+	
 
 	mpskit rdat unpack VOCAB.DAT
 
@@ -25,5 +27,5 @@
 	mpskit hag pack global.hag
 
 	# run Rex, start new game, point mouse at fuzzy dice
-	# you will text "Look at fuzzy dice" with f replaced
+	# you will see text "Look at fuzzy dice" with f replaced
 	# with your new letter
