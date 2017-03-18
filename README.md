@@ -99,9 +99,9 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit ff unpack FONTCONV.FF
 	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
 	
-	# edit your new letter but do not insert new colors to the image
-	# modifying image width is ok
-	gimp FONTCONV.FF.001.png
+	# edit image of the letter, Gimp works great for this
+	# you can modify image width but not height
+	#gimp FONTCONV.FF.001.png
 		
 	mpskit ff pack FONTCONV.FF
 	mpskit hag pack ../GLOBAL.HAG
