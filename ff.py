@@ -47,7 +47,7 @@ def get_col_index(c):
 		return 2
 	if c == (0,63,0,255):
 		return 3
-	print("error: invalid color: {}".format(c))
+	print("WARNING: invalid font color: {}".format(c))
 	
 	
 
@@ -142,16 +142,24 @@ def write_ff_header(f, h):
 	
 	
 def read_ff(ff_name):
+	"""
+	FF file: 1 part MADSPACK
+	header
+		max_height: 1 byte
+		max_width: 1 byte
+		glyphs widths: 128 bytes
+		glyphs offsets: 2 x 128 byte
+	glyphs
+		...		
+	"""
 	check_ext(ff_name, '.FF')
 	
 	parts = read_madspack(ff_name)
 	save_madspack(ff_name, parts)
-	
 	f = parts[0]
-	f.seek(0)
 	
-	h = Record()
-	
+	# Header
+	h = Record()	
 	h.max_height = read_uint8(f)
 	h.max_width = read_uint8(f)
 
@@ -160,13 +168,12 @@ def read_ff(ff_name):
 	# null has width 0
 	h.char_widths = [0] + [read_uint8(f) for _ in range(127)]
 	
-	
-	
 	read_uint8(f)  # alignment to 128
+		
+	
 	
 	# space occupied by glyph is 
 	# math.ceil((glyph_width * max_height) / 4.0)   # or is is rounded per line ?
-	
 	
 	# offsets inside section
 	h.char_offsets = [2 + 128 + 256] + [read_uint16(f) for _ in range(127)]	
@@ -175,13 +182,19 @@ def read_ff(ff_name):
 	
 	assert f.tell() == 2 + 128 + 256
 	
+	
 	save_ff_header(ff_name, h)	
 
-	# load glyphs	
+	# Glyphs
+	
+	f.seek(h.char_offsets[1])
 	for ch in range(1,128):
 		
 		width = h.char_widths[ch]
 		height = h.max_height
+		offset = h.char_offsets[ch]
+		
+		assert f.tell() == offset
 		
 		if width == 0:
 			continue
@@ -218,8 +231,7 @@ def read_ff(ff_name):
 				x += 1
 				if x == width:
 					break
-					
-				
+								
 			y += 1
 
 		oname = "{}.{:03}.png".format(ff_name, ch)

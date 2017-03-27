@@ -38,7 +38,7 @@ def load_mdat_metainfo(mdat_name):
 		return json.load(f)
 
 
-def read_mdat(f, fname, verbose = 0):
+def read_mdat(fname, verbose = 0):
 	if fname != 'MESSAGES.DAT':
 		warning('mdat decoder: only MESSAGES.DAT allowed')
 	
@@ -51,42 +51,46 @@ def read_mdat(f, fname, verbose = 0):
 	if verbose:
 		print('mdat: count={}'.format(num))
 	
-	curr_header = f.tell()
+	with open(fname, 'rb') as f:
 		
-	for _ in range(num):
-		# entry header
-		f.seek(curr_header)
-		sid,offset,length = read_struct(f, "<IIH")
 		curr_header = f.tell()
-					
-		# entry content
-		f.seek(offset)
-		
-		
-		dest = read_fab(f, length, verbose = 0)
-		
-		clength = f.tell() - offset
-		if verbose:
-			print("sid = {}; length = {}; clength = {};".format(sid, length, clength))
 			
+		for _ in range(num):
+			# entry header
+			f.seek(curr_header)
+			sid,offset,length = read_struct(f, "<IIH")
+			curr_header = f.tell()
+						
+			# entry content
+			f.seek(offset)
+			
+			
+			dest = read_fab(f, length, verbose = 0)
+			
+			clength = f.tell() - offset
+			if verbose:
+				print("sid = {}; length = {}; clength = {};".format(sid, length, clength))
+				
+			
+			
+			entry = decode_string(dest.read())
+			entries.append(entry)
+			
+			metas.append({"id": sid})
 		
 		
-		entry = decode_string(dest.read())
-		entries.append(entry)
-		
-		metas.append({"id": sid})
-	
-	
 	save_mdat_messages(fname, entries)
 	save_mdat_metainfo(fname, metas)
 
 
-def write_mdat(f, fname, verbose = 0):
+def write_mdat(fname, verbose = 0):
 	if fname != 'MESSAGES.DAT':
 		warning('mdat decoder: only MESSAGES.DAT allowed')
 	
 	messages = load_mdat_messages(fname)
 	metas = load_mdat_metainfo(fname)
+	
+	
 	
 	#
 	msgs = [encode_string(s, null_term=True) for s in messages]

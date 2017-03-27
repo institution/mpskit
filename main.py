@@ -13,7 +13,7 @@
     See LICENSE file for more details.
 """
 import sys
-from common import Error, External, warning, InvalidMadspackVersion
+from common import Error, warning
 from hag import read_madsconcat,write_madsconcat
 from dat import read_mdat, write_mdat
 from rdat import read_rdat, write_rdat
@@ -27,164 +27,147 @@ from pik import read_pik
 from art import read_art, write_art
 import os, sys
 import common
+from charmap import load_charmap, save_default_charmap
+from fail import fail
 
-def call(fmt,cmd,path):
+
+def get_handler(fmt, cmd, cwd):
+	if cmd not in ['pack','unpack']:
+		print(usage)
+		fail('invalid command; use "pack" or "unpack"')
 	
-	odd = os.getcwd()
+	h = None
+		
+	if fmt == 'mdat':
+		load_charmap(cwd)
+		if cmd == 'unpack':
+			h = read_mdat
+		elif cmd == 'pack':
+			h = write_mdat
+		
+	elif fmt == 'rdat':
+		load_charmap(cwd)
+		if cmd == 'unpack':
+			h = read_rdat
+		elif cmd == 'pack':
+			h = write_rdat
+						
+	elif fmt == 'hag':
+		if cmd == 'unpack':
+			h = read_madsconcat
+		elif cmd == 'pack':
+			h = write_madsconcat
+		
+	elif fmt == 'ss':
+		if cmd == 'unpack':
+			h = read_ss
+		elif cmd == 'pack':
+			h = write_ss
+					
+	elif fmt == 'fab':
+		if cmd == 'unpack':
+			h = read_fab_unrestricted
+		elif cmd == 'pack':
+			fail("fab compression? what for?")
+			# write_fab_unrestricted(arg1)		
+		
+	elif fmt == 'madspack':
+		if cmd == 'unpack':			
+			h = lambda arg1: save_madspack(arg1, read_madspack(arg1))
+			
+		elif cmd == 'pack':
+			h = lambda arg1: write_madspack(arg1, load_madspack(arg1))
+				
+	elif fmt == 'aa':
+		load_charmap(cwd)
+		if cmd == 'unpack':			
+			h = read_aa
+			
+		elif cmd == 'pack':
+			h = write_aa
+					
+	elif fmt == 'cnv':
+		load_charmap(cwd)
+		if cmd == 'unpack':
+			h = read_cnv
+			
+		elif cmd == 'pack':
+			h = write_cnv
+				
+	elif fmt == 'ff':
+		if cmd == 'unpack':			
+			h = read_ff
+			
+		elif cmd == 'pack':
+			h = write_ff
+				
+	elif fmt == 'pik':
+		if cmd == 'unpack':			
+			h = read_pik
+			
+		elif cmd == 'pack':
+			fail("pik packing not implemented because nobody requested it")
+				
+	elif fmt == 'art':
+		if cmd == 'unpack':			
+			h = read_art
+			
+		elif cmd == 'pack':
+			h = write_art
+			
+	else:		
+		print(usage)	
+		fail('invalid format specification')
+		
 	
-	ndd,arg1 = os.path.split(path)
-	
-	
+	if h is None:
+		print(usage)
+		sys.exit(1)
+		
+	return h
+
+
+
+
+def call_handler(handler, path):
+	odd = os.getcwd()	
+	ndd,arg1 = os.path.split(path)		
 	common.g_curr_dir = ndd
 	
 	if ndd:
 		os.chdir(ndd)
 		
 	try:
-		
-		if cmd not in ['pack','unpack']:
-			print('invalid command; use "pack" or "unpack"')
-			sys.exit(1)
-		
-		
-		if fmt == 'mdat':
-			
-			if cmd == 'unpack':
-				read_mdat(open(arg1, 'rb'), arg1)
-			elif cmd == 'pack':
-				write_mdat(open(arg1, 'wb'), arg1)
-			else:
-				print(usage)
-				sys.exit(1)
-		
-		elif fmt == 'rdat':
-			if cmd == 'unpack':
-				read_rdat(arg1)
-			elif cmd == 'pack':
-				write_rdat(arg1)
-			else:
-				print(usage)
-				sys.exit(1)
-							
-		elif fmt == 'hag':
-		
-			if cmd == 'unpack':
-				read_madsconcat(open(arg1, 'rb'), arg1)
-			elif cmd == 'pack':
-				write_madsconcat(arg1)
-			else:
-				print(usage)
-				sys.exit(1)
-		
-		elif fmt == 'ss':
-			if cmd == 'unpack':
-				read_ss(open(arg1, 'rb'), arg1)
-			elif cmd == 'pack':
-				write_ss(arg1)
-			else:
-				print(usage)
-				sys.exit(1)
-				
-		elif fmt == 'fab':
-			if cmd == 'unpack':
-				read_fab_unrestricted(arg1)			
-			elif cmd == 'pack':
-				print("fab compression? what for?")
-				# write_fab_unrestricted(arg1)		
-			else:
-				print(usage)
-				sys.exit(1)
-			
-		elif fmt == 'madspack':
-			if cmd == 'unpack':			
-				save_madspack(arg1, read_madspack(open(arg1, 'rb')))
-				
-			elif cmd == 'pack':
-				write_madspack(arg1, load_madspack(arg1))
-							
-			else:
-				print(usage)
-				sys.exit(1)
-		
-		elif fmt == 'aa':
-			if cmd == 'unpack':			
-				read_aa(arg1)
-				
-			elif cmd == 'pack':
-				write_aa(arg1)
-							
-			else:
-				print(usage)
-				sys.exit(1)
-			
-		
-		elif fmt == 'cnv':
-			if cmd == 'unpack':			
-				read_cnv(arg1)
-				
-			elif cmd == 'pack':
-				write_cnv(arg1)
-							
-			else:
-				print(usage)
-				sys.exit(1)
-				
-				
-		elif fmt == 'ff':
-			if cmd == 'unpack':			
-				read_ff(arg1)
-				
-			elif cmd == 'pack':
-				write_ff(arg1)
-							
-			else:
-				print(usage)
-				sys.exit(1)
-		
-		elif fmt == 'pik':
-			if cmd == 'unpack':			
-				read_pik(arg1)
-				
-			elif cmd == 'pack':
-				print("pik packing not implemented because nobody requested it")
-							
-			else:
-				print(usage)
-				sys.exit(1)	
-		
-		elif fmt == 'art':
-			if cmd == 'unpack':			
-				read_art(arg1)
-				
-			elif cmd == 'pack':
-				write_art(arg1)
-				
-							
-			else:
-				print(usage)
-				sys.exit(1)	
-				
-		else:
-			
-			raise External('invalid format specification')
-			
-			
-	
-	except InvalidMadspackVersion as e:
-		warning(*e.args)
-		
+		handler(arg1)
 	
 	finally:
 		os.chdir(odd)
 		common.g_curr_dir = ''
+
+
+def call(fmt, cmd, paths):
 		
+	h = get_handler(fmt, cmd, cwd=os.getcwd())
+	
+	for path in paths:
+		call_handler(h, path)
+	
+
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"> <"unpack"|"pack"> <file-name> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"> <"unpack"|"pack"> [file-name ...] 
 '''
 
 
+
 def main():
+	if len(sys.argv) == 3:
+		a,b = sys.argv[1], sys.argv[2]
+		if (a,b) == ('charmap', 'create'):
+			save_default_charmap(os.getcwd())
+			return
+						
+
 	if len(sys.argv) < 3:
 		print(usage)
 		sys.exit(1)
@@ -193,13 +176,8 @@ def main():
 	cmd = sys.argv[2]
 	args = sys.argv[3:]
 	
-	try:
-		for arg in args:
-			call(fmt,cmd,arg)
-	except External as e:
-		print(usage)
-		print('ERROR', e)
-		sys.exit(1)
+	call(fmt,cmd,args)
+	
 	
 if __name__ == "__main__":
 	main()

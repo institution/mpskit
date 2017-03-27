@@ -16,20 +16,15 @@
 from io import BytesIO
 import json
 import struct, os, os.path, sys, io
-from collections import OrderedDict
 import _io, sys
-
-
+from conf import conf
+from record import Record
+from fail import fail
 
 class Error(Exception): 
 	def __str__(self):
 		return format(*self.args)
 	
-class External(Error): pass
-class InvalidMadspackVersion(Error): pass
-
-
-
 
 
 
@@ -117,7 +112,7 @@ def write_raw(f, n, bs):
 
 def check_ext(name, ext):
 	if not name.upper().endswith(ext.upper()):
-		error('invalid extension: expected={}; file={};', ext, name)
+		fail('invalid extension: expected={}; file={};', ext, name)
 
 def read_raw(f, n):
 	return f.read(n)
@@ -175,9 +170,6 @@ def write_ascii(f, s):
 	for b in s.encode('ascii'):
 		write_uint8(f, b)
 
-def error(fmt, *args):
-	print('ERROR: ' + fmt.format(*args))
-	sys.exit(1)
 
 def warning(fmt, *args):
 	print('WARNING: ' + fmt.format(*args))
@@ -185,7 +177,7 @@ def warning(fmt, *args):
 
 def write_string(f, n, s):
 	if len(s) > n:
-		error('string too long (must be < {}): {}', n, s)
+		fail('string too long (must be < {}): {}', n, s)
 				
 	for ch in s:
 		byte = ord(ch)
@@ -211,74 +203,41 @@ def decode_string(b, null_term=False):
 		#import ipdb; ipdb.set_trace()
 		xs.append(chr(byte))
 		
-	s = ''.join(xs)
-	s = s.replace("\x00", '|')
-	return s
+	# replace
+	for i in range(len(xs)):
+		y = conf.charmap_decode.get(xs[i], None)
+		if y != None:
+			xs[i] = y
 		
-def encode_string(s, null_term=False, max_len=None, fill=False):
+	return ''.join(xs)
+		
+def encode_string(s, null_term=False, max_len=None, fill=False, charmap=None):
 	"""
 	null_term -- add null at the end of string if not already present
 	max_len -- raise error when string is longer then max_len after encoding
 	fill -- fill to max_len with nulls
 	"""	
-	if null_term and not s.endswith('|'):
-		s = s + '|'		
-	s = s.replace('|', "\x00")
-	b = s.encode('ascii')
+	
+	xs = list(s)
+	
+	# replace
+	for i in range(len(xs)):
+		y = conf.charmap_encode.get(xs[i], None)
+		if y != None:
+			xs[i] = y
+		
+	if null_term and xs[-1:] != ["\x00"]:
+		xs.append("\x00")
+	
+	b = ''.join(xs).encode('ascii')
 	
 	if max_len is not None and len(b) > max_len:
-		error('this string must be shorter then {} chars: {}', max_len, s)
+		fail('this string must be shorter then {} chars: {}', max_len, s)
 	
 	if fill:
 		b = b + b''.join([b'\x00'] * (max_len - len(b)))
 	return b
 
-
-
-class Record:
-	def __init__(self):
-		self.__dict__['_inner'] = OrderedDict()
-		
-	def __setattr__(self,k,v):			
-		self.__dict__['_inner'][k] = v
-		
-	def __getattr__(self,k):
-		return self.__dict__['_inner'][k]
-		
-	def __setitem__(self,k,v):			
-		self.__dict__['_inner'][k] = v
-	
-	def __getitem__(self,k):			
-		return self.__dict__['_inner'][k]	
-		
-	def items(self):		
-		return self._inner.items()
-	
-	def as_dict(self):
-		return self.__dict__['_inner']
-	
-		
-	def as_list(self):
-		return self.__dict__['_inner']
-		
-		ls = []
-		for k,v in self.items():
-			ls.append((k,v))
-		return ls
-
-	@classmethod
-	def from_dict(Cls, kvs):
-		r = Cls()
-		r.__dict__['_inner'] = kvs
-		return r
-
-
-	@classmethod
-	def from_list(Cls, kvs):
-		r = Cls()
-		for k,v in kvs.items():
-			r[k] = v
-		return r
 
 
 Header = Record

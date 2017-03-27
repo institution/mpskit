@@ -25,7 +25,8 @@ transparency_index = 0xFD
 
 FEATURE_RESIZE = 1
 
-def read_ss(f, ss_name):
+
+def read_ss(ss_name):
 	
 	"""
 	SS file is a MADSPACK file with 4 parts:
@@ -73,9 +74,8 @@ def read_ss(f, ss_name):
 	check_ext(ss_name, '.SS')
 		
 	verbose = 0
-	
-	
-	parts = read_madspack(f)
+		
+	parts = read_madspack(ss_name)
 	
 	save_madspack(ss_name, parts)
 		

@@ -79,12 +79,8 @@ def read_madspack(madspack_name):
 	
 	magic = f.read(12).decode('ascii')
 	if magic != 'MADSPACK 2.0':
-		raise InvalidMadspackVersion(
-			"invalid madspack version; expected=MADSPACK 2.0; got={}; file={}", magic, madspack_name
-		)
+		fail("invalid madspack version; expected=MADSPACK 2.0; got={}; file={}", magic, madspack_name)
 		
-	
-	
 	
 	f.seek(14)
 	_count = read_uint16(f)    # num of parts
