@@ -19,7 +19,7 @@ verbose = 0
 
 def read_madsconcat(fname):
 	check_ext(fname, '.HAG')
-	f
+	
 	output_path = '{}.dir'.format(fname)
 	lst_name = '{}.lst'.format(fname)
 	

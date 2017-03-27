@@ -3,10 +3,12 @@ mpskit
 
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin).
 
-Version 1.4.0
+Version 1.5.0
 
 Release Notes
 -------------
+
+**1.5.0** - charmaps added, see EXAMPLE.md
 
 **1.4.0** - Rex Nebular ART format support added; All png files are now written in indexed mode (see Notes below)
 
@@ -95,6 +97,8 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 
 ### Adding new letter to font ###
 
+	# for extended example read EXAMPLE.md
+
 	cd GLOBAL.HAG.dir	
 	mpskit ff unpack FONTCONV.FF
 	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
@@ -115,7 +119,15 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit cnv unpack */*.CNV
 	mpskit art unpack */*.ART
 	mpskit pik unpack */*.PIK
-
+	
+### Create charmap in current directory ###
+	
+	# for extended example read EXAMPLE.md
+	
+	mpskit charmap create
+	
+	
+	
 
 Supported File Formats
 ----------------------

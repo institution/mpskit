@@ -9,7 +9,7 @@ from fail import fail,warning,printf
 
 
 default_charmap = u'''{
-"0": "|"
+"000": "|"
 }
 '''
 
@@ -47,7 +47,7 @@ def find_charmap_path(cwd):
 def load_charmap(cwd):
 	charmap_path = find_charmap_path(cwd)
 	if charmap_path is None:
-		warning('cannot locate charmap file: {}', charmap_filename)
+		# warning('cannot locate charmap file: {}', charmap_filename)
 		printf('using default charmap')
 		# printf('you can create default charmap with: mpskit charmap create')
 		# printf('it should be located in game main directory')
@@ -63,7 +63,7 @@ def load_charmap(cwd):
 	try:
 		cm = json.loads(charmap_json)	
 	except json.decoder.JSONDecodeError as e:
-		import ipdb; ipdb.set_trace()
+		#import ipdb; ipdb.set_trace()
 		fail("ERROR: while reading charmap file: {}", str(e))
 
 	conf.charmap_decode = {}

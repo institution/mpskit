@@ -44,14 +44,15 @@ def read_mdat(fname, verbose = 0):
 	
 	entries = []
 	metas = []
-	
-	# number of entries
-	num = read_uint16(f)
-	
-	if verbose:
-		print('mdat: count={}'.format(num))
-	
+
 	with open(fname, 'rb') as f:
+	
+		# number of entries
+		num = read_uint16(f)
+		
+		if verbose:
+			print('mdat: count={}'.format(num))
+		
 		
 		curr_header = f.tell()
 			

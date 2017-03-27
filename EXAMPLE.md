@@ -5,6 +5,7 @@
 	# enter Rex main directory
 	
 	# this command will create charmap in current directory if you don't have one already
+	# you should create it in the main directory of the game you are translating
 	mpskit charmap create
 	
 	# open charmap-mpskit.json and edit it to look like:
@@ -14,7 +15,7 @@
 	}
 	
 	# I'm using "φ" (Greek small letter fi) as an example
-	# you can assign up to 127 letters here
+	# you can assign up to 127 letters here numbered from "001" to "127"
 	# end of string mark "|" can be changed or removed as well
 	# unassigned letters will default to ASCII encoding
 
