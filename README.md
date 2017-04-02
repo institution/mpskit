@@ -1,12 +1,15 @@
 mpskit
 ======
 
-Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin).
+Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
-Version 1.5.0
+
+Version 1.6.0
 
 Release Notes
 -------------
+
+**1.6.0** - lff unpack TMB10 TMB12 TMR10 TMR12 TMR14 HVR08 ("The Legacy: Realm of Terror" font files)
 
 **1.5.0** - charmaps added, see EXAMPLE.md
 
@@ -126,26 +129,37 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	
 	mpskit charmap create
 	
+### Legacy: Realm of Terror ###
+	
+	# unpacking of font files
+	mpskit lff unpack T???? HVR08 
+	
+	
 	
 	
 
 Supported File Formats
 ----------------------
 
-|command  |applied to                            |content             |
-|---------|--------------------------------------|--------------------|
-|hag      |HAG files                             |collection of files |
-|mdat     |MESSAGES.DAT file                     |text                |
-|rdat     |DAT files containing text             |text                |
-|ss       |SS files                              |sprites             |
-|aa       |AA files                              |text                |
-|cnv      |CNV files                             |text                |
-|art      |ART files                             |background image    |
-|ff       |FF files                              |glyphs              |
-|pik      |PIK files                             |background image    |
-|fab      |file containing FAB section           |                    |
-|madspack |any file which begins with "MADSPACK" |                    |
+|command  |applied to                            |content             |games    |
+|---------|--------------------------------------|--------------------|---------|
+|hag      |HAG files                             |collection of files |rex      |
+|mdat     |MESSAGES.DAT file                     |text                |rex      |
+|rdat     |DAT files containing text             |text                |rex      |
+|ss       |SS files                              |sprites             |rex,col  |
+|aa       |AA files                              |text                |rex      |
+|cnv      |CNV files                             |text                |dsp      |
+|art      |ART files                             |background image    |rex      |
+|ff       |FF files                              |font                |rex      |
+|pik      |PIK files                             |background image    |col      |
+|lff      |TMB10 TMB12 TMR10 TMR12 TMR14 HVR08   |font                |leg      |
+|fab      |file containing FAB section           |                    |         |
+|madspack |any file which begins with "MADSPACK" |                    |         |
 
+rex = Rex Nebular
+col = Colonization
+dsp = Dragonsphere
+leg = The Legacy: Realm of Terror
 
 Notes
 -----

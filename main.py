@@ -14,6 +14,10 @@
 """
 import sys
 from common import Error, warning
+import os, sys
+import common
+from charmap import load_charmap, save_default_charmap
+from fail import fail
 from hag import read_madsconcat,write_madsconcat
 from dat import read_mdat, write_mdat
 from rdat import read_rdat, write_rdat
@@ -25,10 +29,7 @@ from ff import read_ff, write_ff
 from cnv import read_cnv, write_cnv
 from pik import read_pik
 from art import read_art, write_art
-import os, sys
-import common
-from charmap import load_charmap, save_default_charmap
-from fail import fail
+from lff import read_lff, write_lff
 
 
 def get_handler(fmt, cmd, cwd):
@@ -114,7 +115,15 @@ def get_handler(fmt, cmd, cwd):
 			
 		elif cmd == 'pack':
 			h = write_art
+	
+	elif fmt == 'lff':
+		if cmd == 'unpack':			
+			h = read_lff
 			
+		elif cmd == 'pack':
+			h = write_lff
+			warning("lff packing not yet implemented")
+					
 	else:		
 		print(usage)	
 		fail('invalid format specification')
@@ -155,7 +164,7 @@ def call(fmt, cmd, paths):
 
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"> <"unpack"|"pack"> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"> <"unpack"|"pack"> [file-name ...] 
 '''
 
 

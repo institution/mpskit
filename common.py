@@ -35,6 +35,12 @@ def save_image(name, img, **param):
 
 
 
+def save_header(name, h):
+	oname = name + '.json'
+	with open(oname, 'w') as f:
+		json.dump(h.as_dict(), f, indent=2)	
+	print(oname)
+
 
 g_curr_dir = ''
 
@@ -136,6 +142,10 @@ def read_uint8(f):
 def read_uint16(f):
 	return read_struct(f, '<H')[0]
 
+
+def read_int16(f):
+	return read_struct(f, '<h')[0]
+
 def read_sint16(f):
 	return read_struct(f, '<h')[0]
 
@@ -157,6 +167,9 @@ def write_uint16(f, val):
 def write_sint16(f, val):
 	return write_struct(f, '<h', (val,))
 
+def write_int16(f, val):
+	return write_struct(f, '<h', (val,))
+	
 def write_uint32(f, val):
 	return write_struct(f, '<I', (val,))
 		
