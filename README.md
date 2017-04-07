@@ -4,10 +4,12 @@ mpskit
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
 
-Version 1.6.0
+Version 1.7.0
 
 Release Notes
 -------------
+
+**1.7.0** - partial unpack and pack support for MCC file format from "The Legacy: Realm of Terror", see example
 
 **1.6.0** - lff unpack TMB10 TMB12 TMR10 TMR12 TMR14 HVR08 ("The Legacy: Realm of Terror" font files)
 
@@ -134,6 +136,12 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	# unpacking of font files
 	mpskit lff unpack T???? HVR08 
 	
+	mpskit mcc unpack MCC
+	mpskit mcc pack MCC
+	
+	# NOTE 1: MCC colors will be mixed but will work correctly in-game
+	# NOTE 2: sprite width and height cannot be modified
+	
 	
 	
 	
@@ -153,12 +161,13 @@ Supported File Formats
 |ff       |FF files                              |font                |rex      |
 |pik      |PIK files                             |background image    |col      |
 |lff      |TMB10 TMB12 TMR10 TMR12 TMR14 HVR08   |font                |leg      |
+|mcc      |MCC index file                        |sprites             |leg      |
 |fab      |file containing FAB section           |                    |         |
 |madspack |any file which begins with "MADSPACK" |                    |         |
 
-rex = Rex Nebular
-col = Colonization
-dsp = Dragonsphere
+rex = Rex Nebular,
+col = Colonization,
+dsp = Dragonsphere,
 leg = The Legacy: Realm of Terror
 
 Notes
@@ -166,7 +175,6 @@ Notes
 
 * png files are written in indexed mode with embeded palette ("Colormap" dialog in GIMP)
 * changes to embeded palette are ignored by mpskit
-* use "mdat" for MESSAGES.DAT and "rdat" for other .DAT files
 
 License
 -------

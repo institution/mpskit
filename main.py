@@ -30,6 +30,7 @@ from cnv import read_cnv, write_cnv
 from pik import read_pik
 from art import read_art, write_art
 from lff import read_lff, write_lff
+from mcc import read_mcc, write_mcc
 
 
 def get_handler(fmt, cmd, cwd):
@@ -123,7 +124,14 @@ def get_handler(fmt, cmd, cwd):
 		elif cmd == 'pack':
 			h = write_lff
 			warning("lff packing not yet implemented")
-					
+	
+	elif fmt == 'mcc':
+		if cmd == 'unpack':			
+			h = read_mcc
+			
+		elif cmd == 'pack':
+			h = write_mcc
+									
 	else:		
 		print(usage)	
 		fail('invalid format specification')
@@ -164,7 +172,7 @@ def call(fmt, cmd, paths):
 
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"> <"unpack"|"pack"> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"|"mcc"> <"unpack"|"pack"> [file-name ...] 
 '''
 
 
