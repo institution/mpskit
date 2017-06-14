@@ -11,8 +11,10 @@ mpskit mdat pack EX.HAG.dir/MESSAGES.DAT
 mpskit mdat unpack EX.HAG.dir/MESSAGES.DAT
 
 mpskit ss unpack EX.HAG.dir/RM901C1.SS
+python3 check.py
 mpskit ss pack EX.HAG.dir/RM901C1.SS
 mpskit ss unpack EX.HAG.dir/RM901C1.SS
+python3 check.py
 
 mpskit ss unpack EX.HAG.dir/RM505A8.SS
 mpskit ss pack EX.HAG.dir/RM505A8.SS

@@ -113,6 +113,7 @@ def read_ss(ss_name):
 	sprites = []
 	for i, sprite_header in enumerate(sprite_headers):
 		sprite = read_sprite(sprite_header, parts[3], pal, mode = ss_header.mode)
+		
 		sprites.append(sprite)
 		
 		# save sprite
@@ -333,7 +334,7 @@ def write_sprite(head, data, header, img, rpal):
 		else:
 			# backwards compability RGBA
 			pix = img.getpixel((x,y))
-			if pix == (0,0,0,0):
+			if pix[3] == 0:
 				# transparent background
 				return 0xFD
 			else:
@@ -437,7 +438,7 @@ def read_sprite(ti, rdata, pal, mode, verbose=0):
 	
 	def write_ind(ci, l=1):
 		if ci == bg:
-			c = bg # 0?
+			c = bg
 		else:
 			c = ci
 			

@@ -75,6 +75,11 @@ def read_palette_col(f):
 		rr,gg,bb = reads(f, '3b')
 		r,g,b = map(vga_color_trans, [rr,gg,bb])		
 		pal.append((r,g,b))
+	
+	# something (PIL?) requires that transparency color must be present in the palette (stupid!)
+	# standard transparency index is 253 so I will just fill with zeroes
+	while len(pal) < 255:
+		pal.append((0,0,0))	
 		
 	return pal
 
@@ -107,7 +112,14 @@ def read_palette_rex(f):
 		
 		#assert pal[i] is None
 		pal.append((r,g,b))
-		
+	
+	
+	
 	assert len(pal) == ncolors
+	
+	# something (PIL?) requires that transparency color must be present in the palette (stupid!)
+	# standard transparency index in Rex is 253 so I will just fill with zeroes
+	while len(pal) < 255:
+		pal.append((0,0,0))	
 		
 	return pal

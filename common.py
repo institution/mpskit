@@ -20,6 +20,7 @@ import _io, sys
 from conf import conf
 from record import Record
 from fail import fail
+from PIL import Image
 
 class Error(Exception): 
 	def __str__(self):
@@ -29,9 +30,10 @@ class Error(Exception):
 
 
 def save_image(name, img, **param):
-	oname = name+'.png'
+	oname = name+'.png'	
 	img.save(oname, **param)
 	print(oname)
+	
 
 
 
