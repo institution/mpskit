@@ -140,7 +140,6 @@ def write_ff_header(f, h):
 	assert f.tell() == 2 + 128 + 256
 	
 	
-	
 def read_ff(ff_name):
 	"""
 	FF file: 1 part MADSPACK
@@ -239,3 +238,96 @@ def read_ff(ff_name):
 		output(oname)
 
 	
+
+
+
+def export_ftb(ff_name):
+	""" Export font to custom binary ftb format
+	"""
+
+	h = load_ff_header(ff_name)
+	
+	with open(ff_name+'.ftb', 'wb') as f:
+		write_uint32(f, 0x46425446)
+		write_uint32(f, 0x00000001)
+
+		write_uint32(f, 0x44414548)
+		write_int16(f, h.max_height)
+		write_int16(f, 0)
+		write_int16(f, 0)
+
+		write_uint32(f, 0x50594c47)
+		write_uint32(f, 128)
+		cpos_x = 0
+		for i in range(128):
+			width = h.char_widths[i]
+			height = h.max_height
+			pos_x = cpos_x
+			pos_y = 0
+			advance = width
+			bearing_x = 0
+			bearing_y = 0
+			
+			write_uint32(f, i) # code
+			write_int16(f, bearing_x);
+			write_int16(f, bearing_y);
+			write_int16(f, advance);
+			write_int16(f, width);
+			write_int16(f, height);
+			write_int16(f, pos_x);
+			write_int16(f, pos_y);
+
+			cpos_x += width
+		
+		# read and paste into one big image
+		dst = Image.new("P", (h.max_width, h.max_height * 128))
+		attach_palette(dst, pal)
+		
+		cpos_y = 0
+		for i in range(128):
+			name_png = "{}.{:03}.png".format(ff_name, i)
+			if os.path.exists(name_png):
+				src = Image.open(name_png)
+				dst.paste(src, (0, cpos_y))
+			cpos_y += h.max_height
+
+		# write pixel data
+		write_uint32(f, 0x414d4141)
+		write_int16(f, dst.size[0])
+		write_int16(f, dst.size[1])
+		for y in range(dst.size[1]):
+			for x in range(dst.size[0]):
+				r,g,b,a = pal[dst.getpixel((x,y))]				
+				write_uint8(f, g)
+
+	print(ff_name+'.ftb')
+	
+
+Appendix_1 = """
+FTB File Format Specification
+-----------------------------
+File is in little endian encoding.
+
+uint32_t file_id; // 'FTBF' 0x46425446
+uint32_t version; // 1
+uint32_t section_id; // 'HEAD' 0x44414548
+int16_t height;
+int16_t ascender;
+int16_t descender;
+uint32_t section_id; // 'GLYP' 0x50594c47
+uint32_t nglyph; 
+struct {
+	uint32_t code; // less than 256 in version 1
+	int16_t bearing_x;
+	int16_t bearing_y;
+	int16_t advance;
+	int16_t width;
+	int16_t height;
+	int16_t pos_x;
+	int16_t pos_y;
+} glyphs[nglyph];
+uint32_t section_id; // 'AAMA' 0x414d4141
+int16_t dim_x;
+int16_t dim_y;
+uint8_t aamask[dim_y * dim_x]; // row-major order (x y) -> (0 0) (1 0) (2 0) ...
+"""
