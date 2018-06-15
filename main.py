@@ -25,7 +25,7 @@ from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
 from aa import read_aa, write_aa
-from ff import read_ff, write_ff
+from ff import read_ff, write_ff, export_ftb
 from cnv import read_cnv, write_cnv
 from pik import read_pik
 from art import read_art, write_art
@@ -103,7 +103,14 @@ def get_handler(fmt, cmd, cwd):
 			
 		elif cmd == 'pack':
 			h = write_ff
-				
+
+	elif fmt == 'ftb':
+		if cmd == 'unpack':			
+			fail("ftb unpacking not supported")
+			
+		elif cmd == 'pack':
+			h = export_ftb
+							
 	elif fmt == 'pik':
 		if cmd == 'unpack':			
 			h = read_pik
@@ -181,7 +188,7 @@ def call(fmt, cmd, paths):
 
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"|"mcc"> <"unpack"|"pack"> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"|"mcc"|"ftb"> <"unpack"|"pack"> [file-name ...] 
 '''
 
 

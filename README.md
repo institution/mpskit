@@ -42,7 +42,7 @@ wget -O mpskit.zip https://github.com/institution/mpskit/archive/master.zip
 unzip -o mpskit.zip
 cd mpskit-master
 
-# install in system path
+# install in system path (sudo may be required)
 echo "python3 `pwd`/main.py \$*" > /usr/local/bin/mpskit
 chmod +x /usr/local/bin/mpskit
 
