@@ -4,11 +4,13 @@ mpskit
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
 
-Version 1.7.1
+Version 1.8.0
 
 Release Notes
 -------------
 
+**1.8.0** - TXR handler; charmap: special handling of "[]" characters (see Notes below)
+			
 **1.7.1** - fixed bug with transparency handling in SS files
 
 **1.7.0** - partial unpack and pack support for MCC file format from "The Legacy: Realm of Terror", see example
@@ -123,13 +125,12 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit ss unpack */*.SS
 	mpskit ff unpack */*.FF
 	mpskit aa unpack */*.AA
+	mpskit txr unpack */*.TXR
 	mpskit cnv unpack */*.CNV
 	mpskit art unpack */*.ART
 	mpskit pik unpack */*.PIK
 	
 ### Create charmap in current directory ###
-	
-	# for extended example read EXAMPLE.md
 	
 	mpskit charmap create
 	
@@ -164,6 +165,7 @@ Supported File Formats
 |pik      |PIK files                             |background image    |col      |
 |lff      |TMB10 TMB12 TMR10 TMR12 TMR14 HVR08   |font                |leg      |
 |mcc      |MCC index file                        |sprites             |leg      |
+|txr      |TXR files                             |text                |rex      |
 |fab      |file containing FAB section           |                    |         |
 |madspack |any file which begins with "MADSPACK" |                    |         |
 
@@ -177,6 +179,7 @@ Notes
 
 * png files are written in indexed mode with embeded palette ("Colormap" dialog in GIMP)
 * changes to embeded palette are ignored by mpskit
+* charmap will not be applied to "[]" characters and anything between them
 
 License
 -------

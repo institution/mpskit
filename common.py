@@ -202,7 +202,7 @@ def write_string(f, n, s):
 	return n
 
 
-
+META_SQUARE_BRACKETS = True   # charmap wont be applied to [] and anything inside them
 
 def decode_string(b, null_term=False):
 	"""
@@ -219,14 +219,27 @@ def decode_string(b, null_term=False):
 		xs.append(chr(byte))
 		
 	# replace
+	charmap_enabled = True
 	for i in range(len(xs)):
-		y = conf.charmap_decode.get(xs[i], None)
-		if y != None:
-			xs[i] = y
+		x = xs[i]
+		
+		# don't map anything inside []
+		if x == '[' and META_SQUARE_BRACKETS:			
+			charmap_enabled = False
+			
+		if charmap_enabled:
+			y = conf.charmap_decode.get(x, None)
+			if y != None:
+				xs[i] = y
+		
+		if x == ']' and META_SQUARE_BRACKETS:
+			charmap_enabled = True
+				
+		
 		
 	return ''.join(xs)
 		
-def encode_string(s, null_term=False, max_len=None, fill=False, charmap=None):
+def encode_string(s, null_term=False, max_len=None, fill=False):
 	"""
 	null_term -- add null at the end of string if not already present
 	max_len -- raise error when string is longer then max_len after encoding
@@ -236,10 +249,21 @@ def encode_string(s, null_term=False, max_len=None, fill=False, charmap=None):
 	xs = list(s)
 	
 	# replace
+	charmap_enabled = True	
 	for i in range(len(xs)):
-		y = conf.charmap_encode.get(xs[i], None)
-		if y != None:
-			xs[i] = y
+		x = xs[i]
+		
+		# don't map anything inside []		
+		if x == '[' and META_SQUARE_BRACKETS:			
+			charmap_enabled = False
+		
+		if charmap_enabled:
+			y = conf.charmap_encode.get(xs[i], None)
+			if y != None:
+				xs[i] = y
+				
+		if x == ']' and META_SQUARE_BRACKETS:
+			charmap_enabled = True
 		
 	if null_term and xs[-1:] != ["\x00"]:
 		xs.append("\x00")

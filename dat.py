@@ -20,7 +20,7 @@ from fab import *
 def save_mdat_messages(mdat_name, h):
 	oname = "{}.msg.json".format(mdat_name)
 	with open(oname, 'w') as f:
-		json.dump(h, f, indent=2)
+		json.dump(h, f, indent=2, ensure_ascii=False)
 	output(oname)
 	
 def save_mdat_metainfo(mdat_name, h):

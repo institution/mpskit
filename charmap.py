@@ -5,11 +5,27 @@ from record import Record
 from conf import conf
 from fail import fail,warning,printf
 
-
-
+# NOTE: charmap will not be applied to "[]" characters and everything inside them
+# NOTE: charmap: keep lower and upper case characters separated by 32
+# NOTE: charmap: keep digits at their default positions
+# NOTE: charmap: keep 010, 013 codes (line-feed and carriage-return)
+# NOTE: charmap: in Rex keep "@"
 
 default_charmap = u'''{
-"000": "|"
+"000": "|",
+"010": "\\u000A",
+"013": "\\u000D",
+"064": "@",
+"048": "0",
+"049": "1",
+"050": "2",
+"051": "3",
+"052": "4",
+"053": "5",
+"054": "6",
+"055": "7",
+"056": "8",
+"057": "9"
 }
 '''
 
@@ -64,7 +80,7 @@ def load_charmap(cwd):
 		cm = json.loads(charmap_json)	
 	except json.decoder.JSONDecodeError as e:
 		#import ipdb; ipdb.set_trace()
-		fail("ERROR: while reading charmap file: {}", str(e))
+		fail("while reading charmap file: {}", str(e))
 
 	conf.charmap_decode = {}
 	conf.charmap_encode = {}

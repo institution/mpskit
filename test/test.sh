@@ -48,6 +48,10 @@ mpskit art unpack EX.HAG.dir/RM101.ART
 mpskit art pack EX.HAG.dir/RM101.ART
 mpskit art unpack EX.HAG.dir/RM101.ART
 
+mpskit txr unpack EX.HAG.dir/CREDITS.TXR
+mpskit txr pack EX.HAG.dir/CREDITS.TXR
+mpskit txr unpack EX.HAG.dir/CREDITS.TXR
+
 
 mpskit hag pack EX.HAG
 mpskit hag unpack EX.HAG

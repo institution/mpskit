@@ -31,6 +31,7 @@ from pik import read_pik
 from art import read_art, write_art
 from lff import read_lff, write_lff
 from mcc import read_mcc, write_mcc
+from txr import read_txr, write_txr
 
 
 def get_handler(fmt, cmd, cwd):
@@ -131,6 +132,14 @@ def get_handler(fmt, cmd, cwd):
 			
 		elif cmd == 'pack':
 			h = write_mcc
+			
+	elif fmt == 'txr':
+		load_charmap(cwd)
+		if cmd == 'unpack':			
+			h = read_txr
+			
+		elif cmd == 'pack':
+			h = write_txr
 									
 	else:		
 		print(usage)	

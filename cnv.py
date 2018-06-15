@@ -160,7 +160,8 @@ def save_cnv_messages(cnv_name, msgs):
 	open(n, 'w').write(
 		json.dumps(
 			msgs,
-			indent=2
+			indent=2,
+			ensure_ascii=False
 		)
 	)
 	output(n)
