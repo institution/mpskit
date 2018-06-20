@@ -241,7 +241,7 @@ def read_ff(ff_name):
 
 
 
-def export_ftb(ff_name):
+def export_ftb(ff_name, scale=3):
 	""" Export font to custom binary ftb format
 	"""
 
@@ -252,18 +252,18 @@ def export_ftb(ff_name):
 		write_uint32(f, 0x00000001)
 
 		write_uint32(f, 0x44414548)
-		write_int16(f, h.max_height)
+		write_int16(f, h.max_height*scale)
 		write_int16(f, 0)
 		write_int16(f, 0)
 
 		write_uint32(f, 0x50594c47)
 		write_uint32(f, 128)
-		cpos_x = 0
+		cpos_y = 0
 		for i in range(128):
-			width = h.char_widths[i]
-			height = h.max_height
-			pos_x = cpos_x
-			pos_y = 0
+			width = h.char_widths[i]*scale
+			height = h.max_height*scale
+			pos_x = 0
+			pos_y = cpos_y
 			advance = width
 			bearing_x = 0
 			bearing_y = 0
@@ -277,10 +277,10 @@ def export_ftb(ff_name):
 			write_int16(f, pos_x);
 			write_int16(f, pos_y);
 
-			cpos_x += width
+			cpos_y += h.max_height*scale
 		
 		# read and paste into one big image
-		dst = Image.new("P", (h.max_width, h.max_height * 128))
+		dst = Image.new("P", (h.max_width*scale, h.max_height*scale * 128))
 		attach_palette(dst, pal)
 		
 		cpos_y = 0
@@ -288,8 +288,15 @@ def export_ftb(ff_name):
 			name_png = "{}.{:03}.png".format(ff_name, i)
 			if os.path.exists(name_png):
 				src = Image.open(name_png)
-				dst.paste(src, (0, cpos_y))
-			cpos_y += h.max_height
+				
+				dst.paste(
+					src.resize(
+						(src.size[0]*scale, src.size[1]*scale),
+						Image.NEAREST
+					),
+					(0, cpos_y)
+				)
+			cpos_y += h.max_height*scale
 
 		# write pixel data
 		write_uint32(f, 0x414d4141)

@@ -1,5 +1,5 @@
 """ Copyright 2015-2017  sta256+mpskit at gmail.com
-    
+
     This file is part of mpskit.
 
     This program is free software: you can redistribute it and/or modify
@@ -22,27 +22,29 @@ verbose = 0
 
 def read_txr(name):
 	check_ext(name, '.TXR')
-	
+
 	r = open(name, 'rb').read()
-	s = decode_string(r)
-	
+	rs = r.split(b"\r\n")
+
+	ss = [decode_string(r) for r in rs]
+
 	on = '{}.json'.format(name)
 	with open(on, 'w') as f:
-		json.dump(s, f, indent=2, ensure_ascii=False)
-		
+		json.dump(ss, f, indent=2, ensure_ascii=False)
+
 	output(on)
-	
+
 def write_txr(name):
 	check_ext(name, '.TXR')
-	
+
 	on = '{}.json'.format(name)
 	with open(on, 'r') as f:
-		s = json.load(f)
-	
-	r = encode_string(s)
-	
+		ss = json.load(f)
+
+	r = b"\r\n".join([encode_string(s) for s in ss])
+
 	with open(name, 'wb') as f:
 		f.write(r)
-	
+
 	output(name)
-	
+
