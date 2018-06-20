@@ -4,13 +4,15 @@ mpskit
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
 
-Version 1.8.0
+Version 1.8.1
 
 Release Notes
 -------------
 
+**1.8.1** - TXR handler will now split text to multiple lines; FF handler will now accept P, RGB and RGBA images as input
+
 **1.8.0** - TXR handler; charmap: special handling of "[]" characters (see Notes below)
-			
+
 **1.7.1** - fixed bug with transparency handling in SS files
 
 **1.7.0** - partial unpack and pack support for MCC file format from "The Legacy: Realm of Terror", see example
@@ -21,7 +23,7 @@ Release Notes
 
 **1.4.0** - Rex Nebular ART format support added; All png files are now written in indexed mode (see Notes below)
 
-**1.3.0** - MESSAGES.DAT is now unpacked/packed into/from 2 files: MESSAGES.DAT.msg.json and MESSAGES.DAT.id.json. 
+**1.3.0** - MESSAGES.DAT is now unpacked/packed into/from 2 files: MESSAGES.DAT.msg.json and MESSAGES.DAT.id.json.
 If you have modified MESSAGES.DAT.msg.json you will need to pair it up with MESSAGES.DAT.id.json extracted from unmodified MESSAGES.DAT
 
 
@@ -59,11 +61,11 @@ Usage examples
 --------------
 
 ### General usage ###
-	
+
 	cd REX
-	
+
 	# unpacking
-	mpskit hag unpack GLOBAL.HAG	
+	mpskit hag unpack GLOBAL.HAG
 	mpskit mdat unpack GLOBAL.HAG.dir/MESSAGES.DAT
 	mpskit ss unpack GLOBAL.HAG.dir/*.SS
 
@@ -71,9 +73,9 @@ Usage examples
 
 	# packing
 	mpskit ss pack GLOBAL.HAG.dir/GRD1_2.SS
-	mpskit mdat pack GLOBAL.HAG.dir/MESSAGES.DAT	
+	mpskit mdat pack GLOBAL.HAG.dir/MESSAGES.DAT
 	mpskit hag pack GLOBAL.HAG
-	
+
 
 ### Changing AA messages ###
 
@@ -82,12 +84,12 @@ Usage examples
 	mpskit aa unpack SECTION9.HAG.dir/RM951A.AA
 
 Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
-	
+
 	change this:
 	"msg": "\"Here it is, Stone."
-	
+
 	to this:
-	"msg": "\"Hello, Kitty!"      
+	"msg": "\"Hello, Kitty!"
 
 	pos_x can be changed to adjust text position on the screen
     "pos_x": 159,
@@ -97,9 +99,9 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 
 	mpskit hag unpack GLOBAL.HAG
 	mpskit cnv unpack GLOBAL.HAG.dir/CONV000.CNV
-	
+
 	# now modify GLOBAL.HAG.dir/CONV000.CNV.msg.json
-	
+
 	mpskit cnv pack GLOBAL.HAG.dir/CONV000.CNV
 	mpskit hag pack GLOBAL.HAG
 
@@ -108,17 +110,17 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 
 	# for extended example read EXAMPLE.md
 
-	cd GLOBAL.HAG.dir	
+	cd GLOBAL.HAG.dir
 	mpskit ff unpack FONTCONV.FF
 	cp FONTCONV.FF.099.png FONTCONV.FF.001.png
-	
+
 	# edit image of the letter, Gimp works great for this
 	# you can modify image width but not height
 	#gimp FONTCONV.FF.001.png
-		
+
 	mpskit ff pack FONTCONV.FF
 	mpskit hag pack ../GLOBAL.HAG
-	
+
 ### Unpack all supported files ###
 
 	mpskit hag unpack *.HAG
@@ -129,25 +131,25 @@ Now in `SECTION9.HAG.dir/RM951A.AA.msg.json`
 	mpskit cnv unpack */*.CNV
 	mpskit art unpack */*.ART
 	mpskit pik unpack */*.PIK
-	
+
 ### Create charmap in current directory ###
-	
+
 	mpskit charmap create
-	
+
 ### Legacy: Realm of Terror ###
-	
+
 	# unpacking of font files
-	mpskit lff unpack T???? HVR08 
-	
+	mpskit lff unpack T???? HVR08
+
 	mpskit mcc unpack MCC
 	mpskit mcc pack MCC
-	
+
 	# NOTE 1: MCC colors will be mixed but will work correctly in-game
 	# NOTE 2: sprite width and height cannot be modified
-	
-	
-	
-	
+
+
+
+
 
 Supported File Formats
 ----------------------
