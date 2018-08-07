@@ -4,10 +4,12 @@ mpskit
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
 
-Version 1.8.1
+Version 1.9.0
 
 Release Notes
 -------------
+
+**1.9.0** - optional TDAT handler for Rex DAT files containing one multiline text message
 
 **1.8.1** - TXR handler will now split text to multiple lines; FF handler will now accept P, RGB and RGBA images as input
 
@@ -159,6 +161,7 @@ Supported File Formats
 |hag      |HAG files                             |collection of files |rex      |
 |mdat     |MESSAGES.DAT file                     |text                |rex      |
 |rdat     |DAT files containing text             |text                |rex      |
+|tdat     |DAT files containing multiline text   |text                |rex      |
 |ss       |SS files                              |sprites             |rex,col  |
 |aa       |AA files                              |text                |rex      |
 |cnv      |CNV files                             |text                |dsp      |

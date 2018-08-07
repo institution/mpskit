@@ -21,6 +21,8 @@ from fail import fail
 from hag import read_madsconcat,write_madsconcat
 from dat import read_mdat, write_mdat
 from rdat import read_rdat, write_rdat
+from tdat import read_tdat, write_tdat
+from tdat import read_tdat, write_tdat
 from ss import read_ss, write_ss
 from fab import read_fab_unrestricted
 from madspack import read_madspack, save_madspack, load_madspack, write_madspack
@@ -54,6 +56,13 @@ def get_handler(fmt, cmd, cwd):
 			h = read_rdat
 		elif cmd == 'pack':
 			h = write_rdat
+		
+	elif fmt == 'tdat':
+		load_charmap(cwd)
+		if cmd == 'unpack':
+			h = read_tdat
+		elif cmd == 'pack':
+			h = write_tdat
 						
 	elif fmt == 'hag':
 		if cmd == 'unpack':
@@ -188,7 +197,7 @@ def call(fmt, cmd, paths):
 
 				
 
-usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"|"mcc"|"ftb"|"txr"> <"unpack"|"pack"> [file-name ...] 
+usage = '''usage: mpskit <"hag"|"mdat"|"rdat"|"ss"|"aa"|"cnv"|"ff"|"fab"|"madspack"|"pik"|"art"|"lff"|"mcc"|"ftb"|"txr"|"tdat"> <"unpack"|"pack"> [file-name ...] 
 '''
 
 

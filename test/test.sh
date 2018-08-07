@@ -53,6 +53,11 @@ mpskit txr pack EX.HAG.dir/CREDITS.TXR
 mpskit txr unpack EX.HAG.dir/CREDITS.TXR
 
 
+mpskit tdat unpack EX.HAG.dir/WARN1.DAT
+mpskit tdat pack EX.HAG.dir/WARN1.DAT
+mpskit tdat unpack EX.HAG.dir/WARN1.DAT
+
+
 mpskit hag pack EX.HAG
 mpskit hag unpack EX.HAG
 echo 'CLEANING..'
