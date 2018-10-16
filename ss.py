@@ -141,9 +141,10 @@ def write_ss(ss_name):
 		#print("PFLAG IS ON")
 		pal = read_palette_col(part2)
 	else:
-		pal = read_palette_rex(part2)
-	
-	# reverse palpalettelete
+		pal = read_palette_rex(part2, fill=None)
+
+	#import ipd; ipdb.set_trace()
+	# reverse pal
 	rpal = {}
 	for i,col in enumerate(pal):
 		rpal[col] = i
@@ -329,10 +330,15 @@ def write_sprite(head, data, header, img, rpal):
 	"""
 
 	def get_index(x,y):
+		""" This is problematic.
+		We can get index from indexed mode image but for ex GIMP may reindex colors on save
+		Or we can reverse map from RGB using palette but than if one color have 2 diffrent indexes...		
+		"""
+		
 		if img.mode == 'P':
 			return img.getpixel((x,y))
-		else:
-			# backwards compability RGBA
+		else:					
+			# reverse map
 			pix = img.getpixel((x,y))
 			if pix[3] == 0:
 				# transparent background

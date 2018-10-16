@@ -84,7 +84,7 @@ def read_palette_col(f):
 	return pal
 
 
-def read_palette_rex(f):
+def read_palette_rex(f, fill=(0,0,0)):
 	"""	Read palette as encoded in Rex	
 	uint16 ncolors
 	repeat ncolors 
@@ -113,13 +113,12 @@ def read_palette_rex(f):
 		#assert pal[i] is None
 		pal.append((r,g,b))
 	
-	
-	
 	assert len(pal) == ncolors
 	
 	# something (PIL?) requires that transparency color must be present in the palette (stupid!)
 	# standard transparency index in Rex is 253 so I will just fill with zeroes
-	while len(pal) < 255:
-		pal.append((0,0,0))	
+	if fill is not None:
+		while len(pal) < 255:
+			pal.append(fill)	
 		
 	return pal
