@@ -4,10 +4,12 @@ mpskit
 Madspack file format decoder/encoder for Rex Nebular, Dragonsphere, Colonization and other Microprose games. Can run on Linux or Windows (using Cygwin). Designed as a translation/modding tool.
 
 
-Version 1.9.1
+Version 1.9.2
 
 Release Notes
 -------------
+
+**1.9.2** - fix problem with ss RLE compression
 
 **1.9.1** - fix problem with incorrect colors when packing PNG in RGB mode
 
