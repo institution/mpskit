@@ -170,7 +170,7 @@ Supported File Formats
 |aa       |AA files                              |text                |rex      |
 |cnv      |CNV files                             |text                |dsp      |
 |art      |ART files                             |background image    |rex      |
-|ff       |FF files                              |font                |rex      |
+|ff       |FF files                              |font                |rex,col  |
 |pik      |PIK files                             |background image    |col      |
 |lff      |TMB10 TMB12 TMR10 TMR12 TMR14 HVR08   |font                |leg      |
 |mcc      |MCC index file                        |sprites             |leg      |
@@ -186,8 +186,8 @@ leg = The Legacy: Realm of Terror
 Notes
 -----
 
-* png files are written in indexed mode with embeded palette ("Colormap" dialog in GIMP)
-* changes to embeded palette are ignored by mpskit
+* png files are written in indexed mode with embedded palette ("Colormap" dialog in GIMP)
+* changes to embedded palette are ignored by mpskit
 * charmap will not be applied to "[]" characters and anything between them
 
 License
